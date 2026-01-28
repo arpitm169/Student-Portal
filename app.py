@@ -253,19 +253,25 @@ def update_profile():
     data = request.json
 
     user_id = data.get("user_id")
-    if not user_id:
-        return jsonify({"success": False, "message": "User ID missing"}), 400
+    name = data.get("name")
 
+    conn = get_db_connection()
+    cur = conn.cursor()   # ✅ DEFINE cur FIRST
+
+    # 🔹 Update name in users table
+    cur.execute("""
+        UPDATE users
+        SET name = %s
+        WHERE user_id = %s
+    """, (name, user_id))
+
+    # 🔹 Existing student_profiles logic (keep this)
     registration_no = data.get("registration_no")
     phone = data.get("phone")
     department = data.get("department")
     year = data.get("year")
     cgpa = data.get("cgpa")
 
-    conn = get_db_connection()
-    cur = conn.cursor()
-
-    # Check if profile exists
     cur.execute(
         "SELECT 1 FROM student_profiles WHERE user_id = %s",
         (user_id,)
@@ -290,7 +296,7 @@ def update_profile():
             VALUES (%s, %s, %s, %s, %s, %s)
         """, (user_id, registration_no, phone, department, year, cgpa))
 
-    conn.commit()
+    conn.commit()     # ✅ COMMIT
     cur.close()
     conn.close()
 
