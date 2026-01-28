@@ -1,0 +1,840 @@
+/* ===============================
+   CSS VARIABLES & RESET
+================================ */
+
+:root {
+    --background: #f5f7fb;
+    --foreground: #1a1a2e;
+    --card: #ffffff;
+    --primary: #4a5aba;
+    --primary-dark: #3d4a9a;
+    --primary-light: #5d6fd4;
+    --secondary: #6c7ae0;
+    --accent: #ff6b9d;
+    --success: #4caf50;
+    --warning: #ff9800;
+    --muted: #f8f9fd;
+    --muted-foreground: #64748b;
+    --border: #e5e9f2;
+    --sidebar-bg: #2e3856;
+    --sidebar-active: #4a5aba;
+    --sidebar-text: #b8c1d9;
+    --header-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --radius: 12px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--background);
+    color: var(--foreground);
+    min-height: 100vh;
+}
+
+/* ===============================
+   SECTION VISIBILITY
+================================ */
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ===============================
+   LOGIN PAGE
+================================ */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: white;
+}
+
+.login-icon {
+    width: 4rem;
+    height: 4rem;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    margin: 0 auto 1rem;
+    font-size: 2rem;
+    backdrop-filter: blur(10px);
+}
+
+.login-header h1 {
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.login-header p {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.login-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 2rem;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.login-card h2 {
+    margin-bottom: 1.5rem;
+    color: var(--foreground);
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--foreground);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 0.95rem;
+    transition: all 0.3s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(74, 90, 186, 0.1);
+}
+
+.error-message {
+    display: none;
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+}
+
+.error-message.show {
+    display: block;
+}
+
+.login-hint {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+}
+
+.login-hint a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* ===============================
+   BUTTONS
+================================ */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(74, 90, 186, 0.3);
+}
+
+.btn-full {
+    width: 100%;
+}
+
+.btn-view {
+    background: var(--primary);
+    color: rgb(255, 255, 255);
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.btn-view:hover {
+    background: var(--primary-dark);
+}
+
+/* ===============================
+   DASHBOARD LAYOUT
+================================ */
+#dashboard-section {
+    display: none;
+    min-height: 100vh;
+}
+
+#dashboard-section.active {
+    display: flex;
+}
+
+/* ===============================
+   SIDEBAR
+================================ */
+#sidebar {
+    width: 220px;
+    background: var(--sidebar-bg);
+    color: white;
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.sidebar-logo {
+    padding: 1.5rem;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    margin: 0 auto;
+    font-size: 2rem;
+}
+
+.sidebar-nav {
+    padding: 1rem 0.75rem;
+    flex: 1;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 0.875rem 1rem;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+}
+
+.nav-icon {
+    margin-right: 0.75rem;
+    font-size: 1.25rem;
+}
+
+.nav-item.active,
+.nav-item:hover {
+    background: var(--sidebar-active);
+    color: white;
+}
+
+.sidebar-footer {
+    padding: 1rem 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ===============================
+   MAIN CONTENT
+================================ */
+.main-wrapper {
+    margin-left: 220px;
+    width: calc(100% - 220px);
+    min-height: 100vh;
+    background: var(--background);
+}
+
+.top-header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.search-input {
+    padding: 0.625rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: 300px;
+    font-size: 0.95rem;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--foreground);
+}
+
+.user-role {
+    font-size: 0.8rem;
+    color: var(--muted-foreground);
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.notification-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+#main-content {
+    padding: 2rem;
+}
+
+/* ===============================
+   DASHBOARD
+================================ */
+.dashboard-header {
+    margin-bottom: 2rem;
+}
+
+.header-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: var(--radius);
+    padding: 2rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.date-info {
+    font-size: 0.875rem;
+    opacity: 0.9;
+    margin-bottom: 0.5rem;
+}
+
+.welcome-section h1 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.welcome-section p {
+    opacity: 0.9;
+}
+
+.illustration-placeholder {
+    font-size: 6rem;
+    opacity: 0.3;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+}
+
+/* ===============================
+   SECTION HEADERS
+================================ */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.section-header h2 {
+    font-size: 1.25rem;
+    color: var(--foreground);
+}
+
+.see-all {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+/* ===============================
+   FINANCE CARDS
+================================ */
+.finance-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.finance-card {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.finance-card.highlighted {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: white;
+}
+
+.finance-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.finance-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.finance-amount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.finance-label {
+    font-size: 0.875rem;
+    opacity: 0.8;
+}
+
+/* ===============================
+   COURSES
+================================ */
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.course-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.course-icon {
+    font-size: 2.5rem;
+}
+
+.course-info {
+    flex: 1;
+}
+
+.course-info h3 {
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+    color: var(--foreground);
+}
+
+/* ===============================
+   INSTRUCTORS
+================================ */
+.instructors-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.instructor-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0;
+}
+
+.instructor-card:not(:last-child) {
+    border-bottom: 1px solid var(--border);
+}
+
+.instructor-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.instructor-avatar.red {
+    background: #ef4444;
+}
+
+.instructor-avatar.blue {
+    background: #3b82f6;
+}
+
+.instructor-avatar.dark {
+    background: #1f2937;
+}
+
+.instructor-info h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+/* ===============================
+   PAYMENT & EXAM SECTIONS
+================================ */
+.payment-section,
+.exam-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.payment-section h3,
+.exam-section h3 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    color: var(--foreground);
+}
+
+.payment-section p,
+.exam-section p {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.see-more {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+/* ===============================
+   OTHER PAGES
+================================ */
+.page h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.page p {
+    color: var(--muted-foreground);
+    margin-bottom: 2rem;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    #sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+    }
+
+    #sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main-wrapper {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .finance-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .courses-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .search-input {
+        width: 200px;
+    }
+}/* ===============================
+   REGISTRATION PAGE (Profile View Style)
+================================ */
+#registration-page {
+    max-width: 900px;
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#registration-page h1 {
+    color: var(--foreground);
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+}
+
+/* Profile Header Section */
+.registration-header {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid var(--border);
+}
+
+.registration-avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.registration-avatar {
+    width: 180px;
+    height: 180px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: white;
+    margin-bottom: 1rem;
+    border: 4px solid var(--border);
+}
+
+.registration-info-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.student-name-display {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--foreground);
+    margin-bottom: 1rem;
+}
+
+.student-quick-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.quick-info-item {
+    font-size: 0.95rem;
+}
+
+.quick-info-label {
+    font-weight: 600;
+    color: var(--primary);
+    margin-right: 0.5rem;
+}
+
+.quick-info-value {
+    color: var(--foreground);
+}
+
+/* Table-style Form */
+.registration-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+}
+
+.registration-table tr {
+    border-bottom: 1px solid var(--border);
+}
+
+.registration-table tr:nth-child(even) {
+    background: #f8f9fd;
+}
+
+.registration-table td {
+    padding: 1rem 1.25rem;
+}
+
+.registration-table td:first-child {
+    width: 35%;
+    font-weight: 600;
+    color: var(--primary);
+    text-align: right;
+    background: #e8ecf8;
+}
+
+.registration-table td:last-child {
+    width: 65%;
+}
+
+.registration-table input {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background: var(--card);
+    color: var(--foreground);
+    transition: all 0.3s;
+}
+
+.registration-table input:disabled {
+    background: transparent;
+    border: none;
+    padding-left: 0;
+    cursor: default;
+    color: var(--foreground);
+    font-weight: 400;
+}
+
+.registration-table input:focus:not(:disabled) {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(74, 90, 186, 0.1);
+}
+
+/* Actions Section */
+.registration-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+
+.registration-actions .btn {
+    min-width: 120px;
+    padding: 0.75rem 1.5rem;
+}
+
+#registration-msg {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    background: rgba(76, 175, 80, 0.1);
+    color: var(--success);
+    border-left: 4px solid var(--success);
+    display: none;
+}
+
+#registration-msg:not(:empty) {
+    display: block;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .registration-header {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .registration-table td:first-child {
+        text-align: left;
+        width: 40%;
+    }
+    
+    .registration-table td {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+    }
+}
