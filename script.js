@@ -1,4 +1,4 @@
-    /**************************************************
+/**************************************************
      * Student Portal - Frontend JavaScript (Dynamic)
      **************************************************/
 
@@ -547,3 +547,59 @@ async function dropCourse(courseId) {
 
 
 
+
+/* ========= PAYMENT PAGE ========= */
+document.getElementById('pay-btn')?.addEventListener('click', async () => {
+    const amountInput = document.getElementById('pay-amount');
+    const msgElement = document.getElementById('payment-msg');
+    const amount = parseFloat(amountInput.value);
+
+    // ✅ STEP 1: Reset previous states (remove old colors)
+    amountInput.classList.remove('error', 'success');
+    msgElement.className = '';
+    msgElement.textContent = '';
+
+    // ✅ STEP 2: Check if amount is valid
+    if (!amount || amount <= 0) {
+        // Show RED error with shake animation
+        amountInput.classList.add('error');
+        msgElement.textContent = '✗ Please enter a valid amount';
+        msgElement.className = 'error';
+        return;
+    }
+
+    try {
+        // ✅ STEP 3: Send payment to server
+        const response = await fetch('/finance/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                user_id: loggedInUser.id,
+                amount: amount
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // ✅ STEP 4: Show GREEN success
+            amountInput.classList.add('success');
+            msgElement.textContent = '✓ Payment successful!';
+            msgElement.className = 'success';
+            amountInput.value = ''; // Clear the input
+            
+            // Refresh finance data on dashboard
+            await loadFinanceData();
+        } else {
+            // ✅ STEP 5: Show RED error if payment failed
+            amountInput.classList.add('error');
+            msgElement.textContent = '✗ ' + (data.message || 'Payment failed');
+            msgElement.className = 'error';
+        }
+    } catch (error) {
+        // ✅ STEP 6: Show RED error if server is down
+        amountInput.classList.add('error');
+        msgElement.textContent = '✗ An error occurred. Please try again.';
+        msgElement.className = 'error';
+    }
+});
