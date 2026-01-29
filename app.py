@@ -307,20 +307,23 @@ def get_all_courses(user_id):
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT 
-            c.course_id,
-            c.course_name,
-            c.course_code,
-            c.course_icon,
-            EXISTS (
-                SELECT 1 FROM enrollments e
-                WHERE e.user_id = %s
-                AND e.course_id = c.course_id
-                AND e.status = 'active'
-            ) AS enrolled
-        FROM courses c
-        ORDER BY c.course_name
-    """, (user_id,))
+    SELECT 
+        c.course_id,
+        c.course_name,
+        c.course_code,
+        c.course_icon,
+        c.instructor_name,
+        c.description,
+        EXISTS (
+            SELECT 1 FROM enrollments e
+            WHERE e.user_id = %s
+            AND e.course_id = c.course_id
+            AND e.status = 'active'
+        ) AS enrolled
+    FROM courses c
+    ORDER BY c.course_name
+""", (user_id,))
+
 
     courses = cur.fetchall()
     cur.close()
