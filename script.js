@@ -167,6 +167,9 @@
         if (page === "registration") {
         loadRegistration();
     }
+    if (page === "courses") {
+            loadAllCourses();   
+        }
 
 
 
@@ -280,7 +283,8 @@
         try {
             const res = await fetch(`/courses/enrolled/${loggedInUser.id}`);
             const data = await res.json();
-            const grid = document.querySelector(".courses-grid");
+            const grid = document.getElementById("enrolled-courses-grid");
+
             grid.innerHTML = "";
 
             data.courses.forEach(c => {
@@ -426,6 +430,63 @@ document.getElementById("header-avatar").textContent =
                 "Failed to save details";
         }
     });
+async function loadAllCourses() {
+    try {
+        const res = await fetch(`/courses/all/${loggedInUser.id}`);
+        const data = await res.json();
+
+        const grid = document.getElementById("all-courses-grid");
+        grid.innerHTML = "";
+
+        data.courses.forEach(c => {
+            grid.innerHTML += `
+                <div class="course-card">
+                    <div class="course-icon">${c.course_icon || "📘"}</div>
+                    <div class="course-info">
+                        <h3>${c.course_name}</h3>
+                        <small>${c.course_code}</small><br><br>
+                        ${
+                            c.enrolled
+                            ? `<button class="btn btn-view" onclick="dropCourse(${c.course_id})">Drop</button>`
+                            : `<button class="btn btn-primary" onclick="enrollCourse(${c.course_id})">Enroll</button>`
+                        }
+                    </div>
+                </div>
+            `;
+        });
+    } catch {
+        console.error("Failed to load courses");
+    }
+}
+async function enrollCourse(courseId) {
+    await fetch("/courses/enroll", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            user_id: loggedInUser.id,
+            course_id: courseId
+        })
+    });
+
+    await loadAllCourses();
+    await loadEnrolledCourses(); // dashboard refresh
+}
+
+async function dropCourse(courseId) {
+    await fetch("/courses/drop", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            user_id: loggedInUser.id,
+            course_id: courseId
+        })
+    });
+
+    await loadAllCourses();
+    await loadEnrolledCourses();
+}
+
+
 
 
 
