@@ -4,6 +4,8 @@
 
     /* ========= GLOBAL STATE ========= */
     let loggedInUser = null;
+    let hasPendingFees = false;   
+
 
     /* ========= DOM ELEMENTS ========= */
     const loginSection = document.getElementById("login-section");
@@ -227,6 +229,8 @@
                     `₹ ${formatNumber(data.finance.paid_amount)}`;
                 document.getElementById("overdue-amount").textContent =
                     `₹ ${formatNumber(data.finance.overdue_amount)}`;
+                    hasPendingFees = data.finance.overdue_amount > 0;
+
             }
         } catch (err) {
             console.error(err);
@@ -444,12 +448,32 @@ async function loadAllCourses() {
                     <div class="course-icon">${c.course_icon || "📘"}</div>
                     <div class="course-info">
                         <h3>${c.course_name}</h3>
-                        <small>${c.course_code}</small><br><br>
+<small>${c.course_code}</small>
+
+<p class="course-prof">
+    👨‍🏫 ${c.instructor_name || "TBA"}
+</p>
+
+<p class="course-desc">
+    ${c.description || "No description available"}
+</p>
+<br>
+
+<span class="badge ${c.enrolled ? 'enrolled' : 'available'}">
+    ${c.enrolled ? 'ENROLLED' : 'AVAILABLE'}
+</span>
+<br><br>
+
                         ${
-                            c.enrolled
-                            ? `<button class="btn btn-view" onclick="dropCourse(${c.course_id})">Drop</button>`
-                            : `<button class="btn btn-primary" onclick="enrollCourse(${c.course_id})">Enroll</button>`
-                        }
+    hasPendingFees
+    ? `<button class="btn btn-primary" disabled title="Clear pending fees to manage courses">
+           Fees Pending
+       </button>`
+    : c.enrolled
+        ? `<button class="btn btn-view" onclick="dropCourse(${c.course_id})">Drop</button>`
+        : `<button class="btn btn-primary" onclick="enrollCourse(${c.course_id})">Enroll</button>`
+}
+
                     </div>
                 </div>
             `;
@@ -458,32 +482,65 @@ async function loadAllCourses() {
         console.error("Failed to load courses");
     }
 }
-async function enrollCourse(courseId) {
-    await fetch("/courses/enroll", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            user_id: loggedInUser.id,
-            course_id: courseId
-        })
-    });
+// 🔍 COURSE SEARCH LOGIC
+document.getElementById("course-search")?.addEventListener("input", e => {
+    const term = e.target.value.toLowerCase();
 
-    await loadAllCourses();
-    await loadEnrolledCourses(); // dashboard refresh
+    document.querySelectorAll("#all-courses-grid .course-card").forEach(card => {
+        card.style.display =
+            card.textContent.toLowerCase().includes(term)
+                ? "flex"
+                : "none";
+    });
+});
+
+async function enrollCourse(courseId) {
+    const btn = event.target;            
+    btn.disabled = true;                 
+    btn.textContent = "Enrolling...";    
+
+    try {
+        await fetch("/courses/enroll", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                user_id: loggedInUser.id,
+                course_id: courseId
+            })
+        });
+
+        await loadAllCourses();
+        await loadEnrolledCourses();
+    } catch (err) {
+        console.error("Enroll failed", err);
+        btn.disabled = false;
+        btn.textContent = "Enroll";
+    }
 }
 
-async function dropCourse(courseId) {
-    await fetch("/courses/drop", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            user_id: loggedInUser.id,
-            course_id: courseId
-        })
-    });
 
-    await loadAllCourses();
-    await loadEnrolledCourses();
+async function dropCourse(courseId) {
+    const btn = event.target;            
+    btn.disabled = true;                
+    btn.textContent = "Dropping...";     
+
+    try {
+        await fetch("/courses/drop", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                user_id: loggedInUser.id,
+                course_id: courseId
+            })
+        });
+
+        await loadAllCourses();
+        await loadEnrolledCourses();
+    } catch (err) {
+        console.error("Drop failed", err);
+        btn.disabled = false;
+        btn.textContent = "Drop";
+    }
 }
 
 
