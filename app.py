@@ -301,6 +301,72 @@ def update_profile():
     conn.close()
 
     return jsonify({"success": True})
+@app.route("/courses/all/<int:user_id>")
+def get_all_courses(user_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT 
+            c.course_id,
+            c.course_name,
+            c.course_code,
+            c.course_icon,
+            EXISTS (
+                SELECT 1 FROM enrollments e
+                WHERE e.user_id = %s
+                AND e.course_id = c.course_id
+                AND e.status = 'active'
+            ) AS enrolled
+        FROM courses c
+        ORDER BY c.course_name
+    """, (user_id,))
+
+    courses = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    return jsonify({"success": True, "courses": courses})
+@app.route("/courses/enroll", methods=["POST"])
+def enroll_course():
+    data = request.json
+    user_id = data["user_id"]
+    course_id = data["course_id"]
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        INSERT INTO enrollments (user_id, course_id)
+        VALUES (%s, %s)
+        ON CONFLICT DO NOTHING
+    """, (user_id, course_id))
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    return jsonify({"success": True})
+@app.route("/courses/drop", methods=["POST"])
+def drop_course():
+    data = request.json
+    user_id = data["user_id"]
+    course_id = data["course_id"]
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        DELETE FROM enrollments
+        WHERE user_id = %s AND course_id = %s
+    """, (user_id, course_id))
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    return jsonify({"success": True})
+
 
 
 # ---------- RUN ----------
