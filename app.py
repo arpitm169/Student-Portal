@@ -370,6 +370,34 @@ def drop_course():
 
     return jsonify({"success": True})
 
+# ---------- ATTENDANCE ----------
+@app.route("/attendance/<int:user_id>")
+def get_attendance(user_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT 
+            c.course_name,
+            a.total_classes,
+            a.attended_classes,
+            a.attendance_percentage
+        FROM attendance a
+        JOIN courses c ON a.course_id = c.course_id
+        WHERE a.user_id = %s
+        ORDER BY c.course_name
+    """, (user_id,))
+
+    data = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "attendance": data
+    })
+
+
 
 
 # ---------- RUN ----------
