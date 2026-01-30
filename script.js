@@ -172,6 +172,9 @@
     if (page === "courses") {
             loadAllCourses();   
         }
+        if (page === "attendance") {
+    loadAttendance();
+}
 
 
 
@@ -180,6 +183,8 @@
             item.classList.add("active");
         });
     });
+    
+
 
     /* ========= PAGE CONTROL ========= */
     function showLoginPage() {
@@ -230,77 +235,34 @@
                 document.getElementById("overdue-amount").textContent =
                     `₹ ${formatNumber(data.finance.overdue_amount)}`;
                     hasPendingFees = data.finance.overdue_amount > 0;
-
             }
-        } catch (err) {
-            console.error(err);
+        } catch {
+            console.error("Failed to load finance");
         }
     }
 
-    /* ========= PAY BUTTON (FIXED — ONLY CHANGE) ========= */
-    document.getElementById("pay-btn")?.addEventListener("click", async () => {
-        const amount = parseFloat(document.getElementById("pay-amount").value);
-
-        if (!amount || amount <= 0) {
-            document.getElementById("payment-msg").textContent =
-                "Enter a valid amount";
-            return;
-        }
-
-        try {
-            const res = await fetch("/finance/update", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    user_id: loggedInUser.id,
-                    amount: amount
-                })
-            });
-
-            const data = await res.json();
-
-            if (!data.success) {
-                document.getElementById("payment-msg").textContent =
-                    data.message || "Payment failed";
-                return;
-            }
-
-            document.getElementById("payment-msg").textContent =
-                "Payment successful";
-            document.getElementById("pay-amount").value = "";
-
-            await loadFinanceData();
-
-            pages.forEach(p => p.classList.remove("active"));
-            document.getElementById("dashboard-page").classList.add("active");
-            navItems.forEach(n => n.classList.remove("active"));
-            navItems[0].classList.add("active");
-
-        } catch {
-            document.getElementById("payment-msg").textContent =
-                "Payment failed";
-        }
-    });
-
-    /* ========= COURSES ========= */
+    /* ========= ENROLLED COURSES ========= */
     async function loadEnrolledCourses() {
         try {
             const res = await fetch(`/courses/enrolled/${loggedInUser.id}`);
             const data = await res.json();
-            const grid = document.getElementById("enrolled-courses-grid");
 
+            const grid = document.getElementById("enrolled-courses-grid");
             grid.innerHTML = "";
 
             data.courses.forEach(c => {
                 grid.innerHTML += `
                     <div class="course-card">
-                        <div class="course-icon">${c.course_icon || "📚"}</div>
+                        <div class="course-icon">${c.course_icon || "📘"}</div>
                         <div class="course-info">
                             <h3>${c.course_name}</h3>
                         </div>
-                    </div>`;
+                    </div>
+                `;
             });
-        } catch {}
+        } catch {
+            console.error("Failed to load enrolled courses");
+        }
     }
 
     /* ========= INSTRUCTORS ========= */
@@ -308,86 +270,88 @@
         try {
             const res = await fetch("/instructors");
             const data = await res.json();
-            const section = document.querySelector(".instructors-section");
-            section.innerHTML = "";
 
-            data.instructors.forEach(i => {
-                section.innerHTML += `
-                    <div class="instructor-card">
-                        <div class="instructor-avatar">${i.initials}</div>
-                        <div>${i.name}</div>
-                    </div>`;
-            });
-        } catch {}
+            if (data.success) {
+                const section = document.querySelector(".instructors-section");
+                section.innerHTML = "";
+
+                data.instructors.forEach(instructor => {
+                    section.innerHTML += `
+                        <div class="instructor-item">
+                            <div class="instructor-avatar" style="background: ${instructor.avatar_color}">
+                                ${instructor.initials}
+                            </div>
+                            <div class="instructor-info">
+                                <div class="instructor-name">${instructor.name}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+        } catch {
+            console.error("Failed to load instructors");
+        }
     }
 
-    /* ========= UTILS ========= */
+    /* ========= HELPERS ========= */
     function getInputValue(id) {
-        return document.getElementById(id)?.value.trim();
+        return document.getElementById(id)?.value?.trim() || "";
+    }
+
+    function showLoginError(msg) {
+        loginError.textContent = msg;
+        loginError.style.display = "block";
+    }
+
+    function clearLoginError() {
+        loginError.textContent = "";
+        loginError.style.display = "none";
+    }
+
+    function showRegisterError(msg) {
+        registerError.textContent = msg;
+        registerError.style.display = "block";
+    }
+
+    function formatNumber(num) {
+        return num.toLocaleString("en-IN");
     }
 
     function getInitials(name) {
         return name.split(" ").map(n => n[0]).join("").toUpperCase();
     }
-
-    function showLoginError(msg) {
-        loginError.textContent = msg;
-        loginError.classList.add("show");
-    }
-
-    function clearLoginError() {
-        loginError.textContent = "";
-        loginError.classList.remove("show");
-    }
-
-    function showRegisterError(msg) {
-        registerError.textContent = msg;
-        registerError.classList.add("show");
-    }
-
-    function formatNumber(num) {
-        return parseFloat(num).toLocaleString("en-IN");
-    }
-
-    // Add this to the loadRegistration function to update the header display
-
     async function loadRegistration() {
-        const nameInput = document.getElementById("reg-name-profile");
-        if (!nameInput) return;
+    try {
+        const res = await fetch(`/profile/${loggedInUser.id}`);
+        const data = await res.json();
 
-        try {
-            const res = await fetch(`/profile/${loggedInUser.id}`);
-            const data = await res.json();
+        if (data.success && data.user) {
+            document.getElementById("reg-name-profile").value = data.user.name || "";
+            document.getElementById("reg-no").value = data.user.registration_no || "";
+            document.getElementById("reg-phone").value = data.user.phone || "";
+            document.getElementById("reg-department").value = data.user.department || "";
+            document.getElementById("reg-year").value = data.user.year || "";
+            document.getElementById("reg-cgpa").value = data.user.cgpa || "";
 
-            if (data.success) {
-                // Populate form inputs
-                document.getElementById("reg-name-profile").value = data.user.name || "";
-                document.getElementById("reg-phone").value = data.user.phone || "";
-                document.getElementById("reg-department").value = data.user.department || "";
-                document.getElementById("reg-year").value = data.user.year || "";
-                document.getElementById("reg-cgpa").value = data.user.cgpa || "";
-                document.getElementById("reg-no").value = data.user.registration_no || "";
+            // ✅ Update profile display at the top
+            document.getElementById("profile-name-display").textContent = data.user.name || "John Doe";
+            document.getElementById("profile-regno-display").textContent = data.user.registration_no || "—";
+            document.getElementById("profile-dept-display").textContent = data.user.department || "—";
+            document.getElementById("profile-year-display").textContent = data.user.year || "—";
 
-                // Update header display
-                document.getElementById("profile-name-display").textContent = data.user.name || "—";
-                document.getElementById("profile-regno-display").textContent = data.user.registration_no || "—";
-                document.getElementById("profile-dept-display").textContent = data.user.department || "—";
-                document.getElementById("profile-year-display").textContent = data.user.year || "—";
-                
-                // Update avatar with initials
-                const initials = getInitials(data.user.name || "Student");
-                document.getElementById("profile-avatar").textContent = initials;
-            }
-        } catch {
-            console.error("Failed to load profile");
+            // ✅ Update avatar initials
+            const initials = getInitials(data.user.name || "John Doe");
+            document.getElementById("profile-avatar").textContent = initials;
         }
+    } catch {
+        console.error("Failed to load registration");
     }
+}
 
-    // Update the save function to refresh the header display
-    saveBtn?.addEventListener("click", async () => {
+saveBtn?.addEventListener("click", async () => {
     const payload = {
         user_id: loggedInUser.id,
-        name: document.getElementById("reg-name-profile").value, // ✅ ADD HERE
+        name: document.getElementById("reg-name-profile").value,
         registration_no: document.getElementById("reg-no").value,
         phone: document.getElementById("reg-phone").value,
         department: document.getElementById("reg-department").value,
@@ -603,3 +567,198 @@ document.getElementById('pay-btn')?.addEventListener('click', async () => {
         msgElement.className = 'error';
     }
 });
+
+/* ========= ATTENDANCE PAGE WITH PIE CHARTS ========= */
+async function loadAttendance() {
+    try {
+        const res = await fetch(`/attendance/${loggedInUser.id}`);
+        const data = await res.json();
+
+        const container = document.getElementById("attendance-table");
+        container.innerHTML = "";
+
+        if (!data.attendance || data.attendance.length === 0) {
+            container.innerHTML = `
+                <div class="no-data-message">
+                    <p>📊 No attendance data available</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Calculate overall attendance
+        let totalClasses = 0;
+        let totalAttended = 0;
+        
+        data.attendance.forEach(a => {
+            totalClasses += a.total_classes;
+            totalAttended += a.attended_classes;
+        });
+
+        const overallPercentage = totalClasses > 0 ? ((totalAttended / totalClasses) * 100).toFixed(2) : 0;
+        const overallAbsent = totalClasses - totalAttended;
+
+        // Determine overall status
+        let overallStatusClass = 'good';
+        let overallStatusText = 'Good Standing';
+        if (overallPercentage < 75) {
+            overallStatusClass = 'critical';
+            overallStatusText = 'Needs Attention';
+        } else if (overallPercentage < 85) {
+            overallStatusClass = 'warning';
+            overallStatusText = 'Below Target';
+        }
+
+        // Add overall attendance card
+        container.innerHTML = `
+            <div class="overall-attendance-card">
+                <div class="overall-header">
+                    <h2>📊 Overall Attendance</h2>
+                    <span class="attendance-badge ${overallStatusClass}">${overallStatusText}</span>
+                </div>
+                
+                <div class="overall-content">
+                    <div class="overall-pie-container">
+                        <div class="pie-chart-large" style="--percentage: ${overallPercentage};">
+                            <div class="pie-chart-center-large">
+                                <span class="percentage-text-large">${overallPercentage}%</span>
+                                <span class="percentage-label">Overall Present</span>
+                            </div>
+                        </div>
+                        <div class="pie-legend">
+                            <div class="legend-item">
+                                <span class="legend-color present"></span>
+                                <span class="legend-text">Present: ${totalAttended}</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color absent"></span>
+                                <span class="legend-text">Absent: ${overallAbsent}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="overall-stats">
+                        <div class="overall-stat-card">
+                            <div class="stat-icon-large">📚</div>
+                            <div class="stat-details">
+                                <span class="stat-value-large">${totalClasses}</span>
+                                <span class="stat-label-large">Total Classes</span>
+                            </div>
+                        </div>
+                        <div class="overall-stat-card">
+                            <div class="stat-icon-large">✅</div>
+                            <div class="stat-details">
+                                <span class="stat-value-large">${totalAttended}</span>
+                                <span class="stat-label-large">Attended</span>
+                            </div>
+                        </div>
+                        <div class="overall-stat-card">
+                            <div class="stat-icon-large">❌</div>
+                            <div class="stat-details">
+                                <span class="stat-value-large">${overallAbsent}</span>
+                                <span class="stat-label-large">Missed</span>
+                            </div>
+                        </div>
+                        <div class="overall-stat-card">
+                            <div class="stat-icon-large">📖</div>
+                            <div class="stat-details">
+                                <span class="stat-value-large">${data.attendance.length}</span>
+                                <span class="stat-label-large">Total Courses</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-divider">
+                <h2>📚 Course-wise Attendance</h2>
+            </div>
+
+            <div class="course-attendance-grid">
+        `;
+
+        // Add individual course attendance cards
+        data.attendance.forEach(a => {
+            const percentage = parseFloat(a.attendance_percentage);
+            const attended = a.attended_classes;
+            const total = a.total_classes;
+            const absent = total - attended;
+            
+            // Determine status color
+            let statusClass = 'good';
+            let statusText = 'Good';
+            if (percentage < 75) {
+                statusClass = 'critical';
+                statusText = 'Critical';
+            } else if (percentage < 85) {
+                statusClass = 'warning';
+                statusText = 'Warning';
+            }
+
+            container.innerHTML += `
+                <div class="attendance-card">
+                    <div class="attendance-header">
+                        <h3>${a.course_name}</h3>
+                        <span class="attendance-badge ${statusClass}">${statusText}</span>
+                    </div>
+                    
+                    <div class="attendance-content">
+                        <div class="pie-chart-container">
+                            <div class="pie-chart" style="--percentage: ${percentage};">
+                                <div class="pie-chart-center">
+                                    <span class="percentage-text">${percentage}%</span>
+                                    <span class="percentage-label">Present</span>
+                                </div>
+                            </div>
+                            <div class="pie-legend">
+                                <div class="legend-item">
+                                    <span class="legend-color present"></span>
+                                    <span class="legend-text">Present: ${attended}</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-color absent"></span>
+                                    <span class="legend-text">Absent: ${absent}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="attendance-stats">
+                            <div class="stat-item">
+                                <span class="stat-icon">📚</span>
+                                <div class="stat-content">
+                                    <span class="stat-value">${total}</span>
+                                    <span class="stat-label">Total Classes</span>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">✅</span>
+                                <div class="stat-content">
+                                    <span class="stat-value">${attended}</span>
+                                    <span class="stat-label">Attended</span>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">❌</span>
+                                <div class="stat-content">
+                                    <span class="stat-value">${absent}</span>
+                                    <span class="stat-label">Missed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        container.innerHTML += `</div>`; // Close course-attendance-grid
+
+    } catch (e) {
+        console.error("Failed to load attendance", e);
+        const container = document.getElementById("attendance-table");
+        container.innerHTML = `
+            <div class="error-message">
+                <p>⚠️ Failed to load attendance data</p>
+            </div>
+        `;
+    }
+}
