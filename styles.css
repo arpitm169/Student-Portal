@@ -1022,3 +1022,478 @@ body {
     display: block;
     margin-top: 0.25rem;
 }
+/* ===============================
+   ATTENDANCE PAGE WITH PIE CHARTS
+================================ */
+#attendance-page {
+    max-width: 1400px;
+}
+
+#attendance-page h1 {
+    font-size: 1.75rem;
+    margin-bottom: 2rem;
+    color: var(--foreground);
+}
+
+/* Overall Attendance Card */
+.overall-attendance-card {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    border-radius: var(--radius);
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 8px 24px rgba(30, 58, 138, 0.3);
+    color: white;
+}
+
+.overall-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.overall-header h2 {
+    font-size: 1.75rem;
+    margin: 0;
+    color: white;
+}
+
+.overall-content {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 3rem;
+    align-items: center;
+}
+
+.overall-pie-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pie-chart-large {
+    position: relative;
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    background: conic-gradient(
+        #4caf50 0deg,
+        #4caf50 calc(var(--percentage) * 3.6deg),
+        #ef4444 calc(var(--percentage) * 3.6deg),
+        #ef4444 360deg
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.pie-chart-center-large {
+    width: 190px;
+    height: 190px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2);
+}
+
+.percentage-text-large {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--foreground);
+    line-height: 1;
+}
+
+.overall-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+}
+
+.overall-stat-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.overall-stat-card:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.stat-icon-large {
+    font-size: 2.5rem;
+    width: 65px;
+    height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+}
+
+.stat-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value-large {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    line-height: 1;
+}
+
+.stat-label-large {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-top: 0.375rem;
+}
+
+/* Section Divider */
+.section-divider {
+    margin: 2.5rem 0 1.5rem 0;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border);
+}
+
+.section-divider h2 {
+    font-size: 1.5rem;
+    color: var(--foreground);
+    margin: 0;
+}
+
+/* Course Attendance Grid */
+.course-attendance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    gap: 1.5rem;
+}
+
+#attendance-table {
+    width: 100%;
+}
+
+.attendance-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.attendance-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.attendance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border);
+}
+
+.attendance-header h3 {
+    font-size: 1.25rem;
+    color: var(--foreground);
+    margin: 0;
+}
+
+.attendance-badge {
+    padding: 0.375rem 0.875rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.attendance-badge.good {
+    background: rgba(76, 175, 80, 0.15);
+    color: #2e7d32;
+}
+
+.attendance-badge.warning {
+    background: rgba(255, 152, 0, 0.15);
+    color: #e65100;
+}
+
+.attendance-badge.critical {
+    background: rgba(239, 68, 68, 0.15);
+    color: #c62828;
+}
+
+.attendance-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+/* Pie Chart Styles */
+.pie-chart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.pie-chart {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: conic-gradient(
+        #4caf50 0deg,
+        #4caf50 calc(var(--percentage) * 3.6deg),
+        #ef4444 calc(var(--percentage) * 3.6deg),
+        #ef4444 360deg
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.pie-chart:hover {
+    transform: scale(1.05);
+}
+
+.pie-chart-center {
+    width: 140px;
+    height: 140px;
+    background: var(--card);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 3px var(--background);
+}
+
+.percentage-text {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--foreground);
+    line-height: 1;
+}
+
+.percentage-label {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    margin-top: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pie-legend {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+}
+
+.legend-color.present {
+    background: #4caf50;
+}
+
+.legend-color.absent {
+    background: #ef4444;
+}
+
+.legend-text {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+}
+
+/* White text for legend in overall attendance card */
+.overall-attendance-card .legend-text {
+    color: white;
+    font-weight: 500;
+}
+
+/* Attendance Stats */
+.attendance-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.875rem;
+    background: var(--muted);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    background: var(--border);
+    transform: translateX(5px);
+}
+
+.stat-icon {
+    font-size: 1.75rem;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--card);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--foreground);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--muted-foreground);
+    margin-top: 0.25rem;
+}
+
+/* No Data / Error Messages */
+.no-data-message,
+.error-message {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: var(--card);
+    border-radius: var(--radius);
+    color: var(--muted-foreground);
+}
+
+.no-data-message p,
+.error-message p {
+    font-size: 1.125rem;
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .course-attendance-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .overall-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .overall-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .attendance-content {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .pie-chart {
+        width: 160px;
+        height: 160px;
+    }
+
+    .pie-chart-center {
+        width: 120px;
+        height: 120px;
+    }
+
+    .percentage-text {
+        font-size: 1.75rem;
+    }
+
+    .stat-item {
+        padding: 0.75rem;
+    }
+
+    .stat-icon {
+        font-size: 1.5rem;
+        width: 40px;
+        height: 40px;
+    }
+
+    .stat-value {
+        font-size: 1.25rem;
+    }
+
+    /* Overall attendance responsive */
+    .overall-attendance-card {
+        padding: 1.5rem;
+    }
+
+    .pie-chart-large {
+        width: 200px;
+        height: 200px;
+    }
+
+    .pie-chart-center-large {
+        width: 160px;
+        height: 160px;
+    }
+
+    .percentage-text-large {
+        font-size: 2.5rem;
+    }
+
+    .overall-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .overall-stat-card {
+        padding: 1.25rem;
+    }
+
+    .stat-icon-large {
+        font-size: 2rem;
+        width: 55px;
+        height: 55px;
+    }
+
+    .stat-value-large {
+        font-size: 1.75rem;
+    }
+
+    .overall-header h2 {
+        font-size: 1.5rem;
+    }
+}
