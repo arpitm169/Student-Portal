@@ -107,10 +107,11 @@
                 <span class="nav-icon">📚</span>
                 <span class="nav-text">Courses</span>
             </a>
-            <a href="#" class="nav-item" data-page="semester">
-                <span class="nav-icon">📅</span>
-                <span class="nav-text">Drop Semester</span>
-            </a>
+            <a href="#" class="nav-item" data-page="attendance">
+    <span class="nav-icon">📊</span>
+    <span class="nav-text">Attendance</span>
+</a>
+
             <a href="#" class="nav-item" data-page="result">
                 <span class="nav-icon">📋</span>
                 <span class="nav-text">Result</span>
@@ -323,17 +324,11 @@
     />
     <div id="all-courses-grid" class="courses-grid"></div>
 </div>
+<div id="attendance-page" class="page">
+    <h1>Attendance</h1>
+    <div id="attendance-table"></div>
+</div>
+
 
 
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-
-
-
-
-        
-
-
-
-
-
-
