@@ -229,11 +229,14 @@
 
             if (data.success) {
                 document.getElementById("total-amount").textContent =
-                    `₹ ${formatNumber(data.finance.total_amount)}`;
-                document.getElementById("paid-amount").textContent =
-                    `₹ ${formatNumber(data.finance.paid_amount)}`;
-                document.getElementById("overdue-amount").textContent =
-                    `₹ ${formatNumber(data.finance.overdue_amount)}`;
+    `₹ ${formatNumber(data.finance.total_amount)}`;
+
+document.getElementById("paid-amount").textContent =
+    `₹ ${formatNumber(data.finance.paid_amount)}`;
+
+document.getElementById("overdue-amount").textContent =
+    `₹ ${formatNumber(data.finance.overdue_amount)}`;
+
                     hasPendingFees = data.finance.overdue_amount > 0;
             }
         } catch {
@@ -314,8 +317,8 @@
     }
 
     function formatNumber(num) {
-        return num.toLocaleString("en-IN");
-    }
+    return Number(num).toLocaleString("en-IN");
+}
 
     function getInitials(name) {
         return name.split(" ").map(n => n[0]).join("").toUpperCase();
