@@ -383,7 +383,12 @@ body {
 }
 
 .header-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(
+        135deg,
+        #0f172a 0%,   /* dark navy */
+        #1e3a8a 50%,  /* deep blue */
+        #1e40af 100%  /* rich blue */
+    );
     border-radius: var(--radius);
     padding: 2rem;
     color: white;
@@ -393,6 +398,7 @@ body {
     justify-content: space-between;
     align-items: center;
 }
+
 
 .date-info {
     font-size: 0.875rem;
