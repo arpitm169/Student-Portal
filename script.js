@@ -175,6 +175,13 @@
         if (page === "attendance") {
     loadAttendance();
 }
+if (page === "result") {
+    loadResults();
+}
+if (page === "notice") {
+    loadNotices();
+}
+
 
 
 
@@ -765,3 +772,171 @@ async function loadAttendance() {
         `;
     }
 }
+async function loadResults() {
+    try {
+        const res = await fetch(`/results/${loggedInUser.id}`);
+        const data = await res.json();
+
+        const tbody = document.getElementById("result-table-body");
+        tbody.innerHTML = "";
+
+        if (!data.results || data.results.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align:center;">No results published yet</td>
+                </tr>
+            `;
+            return;
+        }
+
+        data.results.forEach(r => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${r.course_name}</td>
+                    <td>${r.internal_marks}</td>
+                    <td>${r.external_marks}</td>
+                    <td><strong>${r.total_marks}</strong></td>
+                    <td>${r.grade}</td>
+                    <td style="color:${r.status === 'PASS' ? 'green' : 'red'};">
+                        ${r.status}
+                    </td>
+                </tr>
+            `;
+        });
+    } catch {
+        console.error("Failed to load results");
+    }
+}
+// Enhanced loadNotices function with better structure
+async function loadNotices() {
+    try {
+        const res = await fetch("/notices");
+        const data = await res.json();
+
+        const container = document.getElementById("notice-list");
+        container.innerHTML = "";
+
+        if (!data.notices || data.notices.length === 0) {
+            container.innerHTML = `
+                <div class="notice-empty-state">
+                    <div class="empty-icon">📢</div>
+                    <h3>No Notices Available</h3>
+                    <p>There are currently no notices to display. Check back later for updates.</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Get icon for notice type
+        const getTypeIcon = (type) => {
+            const icons = {
+                'EXAM': '📝',
+                'ACADEMIC': '📚',
+                'FEE': '💰',
+                'EVENT': '🎉',
+                'PLACEMENT': '💼',
+                'GENERAL': '📢',
+                'URGENT': '⚠️'
+            };
+            return icons[type] || '📢';
+        };
+
+        // Format date nicely
+        const formatDate = (dateString) => {
+            const date = new Date(dateString);
+            const options = { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            return date.toLocaleDateString('en-US', options);
+        };
+
+        data.notices.forEach(n => {
+            const pinnedClass = n.is_pinned ? 'pinned' : '';
+            const typeIcon = getTypeIcon(n.notice_type);
+            
+            container.innerHTML += `
+                <div class="notice-card ${pinnedClass}">
+                    <div class="notice-header">
+                        <div class="notice-title-wrapper">
+                            <div class="notice-title">
+                                <span class="notice-title-icon">${typeIcon}</span>
+                                ${n.title}
+                            </div>
+                        </div>
+                        
+                        <div class="notice-badge-wrapper">
+                            <span class="notice-badge badge-${n.notice_type}">
+                                ${n.notice_type}
+                            </span>
+                            ${n.is_pinned ? '<span class="notice-pinned">📌 PINNED</span>' : ''}
+                        </div>
+                    </div>
+
+                    <div class="notice-meta">
+                        <div class="notice-meta-item">
+                            <span class="notice-meta-icon">👤</span>
+                            Posted by <strong>${n.posted_by}</strong>
+                        </div>
+                        <div class="notice-meta-item">
+                            <span class="notice-meta-icon">📅</span>
+                            ${formatDate(n.posted_at)}
+                        </div>
+                    </div>
+
+                    <div class="notice-content">
+                        ${n.content}
+                    </div>
+                </div>
+            `;
+        });
+
+    } catch (err) {
+        console.error("Failed to load notices", err);
+        const container = document.getElementById("notice-list");
+        container.innerHTML = `
+            <div class="notice-empty-state">
+                <div class="empty-icon">⚠️</div>
+                <h3>Error Loading Notices</h3>
+                <p>Unable to load notices at this time. Please try again later.</p>
+            </div>
+        `;
+    }
+}
+
+// Optional: Add filter functionality
+function initNoticeFilters() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remove active class from all buttons
+            filterButtons.forEach(b => b.classList.remove('active'));
+            
+            // Add active class to clicked button
+            btn.classList.add('active');
+            
+            const filterType = btn.dataset.filter;
+            const noticeCards = document.querySelectorAll('.notice-card');
+            
+            noticeCards.forEach(card => {
+                if (filterType === 'all') {
+                    card.style.display = 'block';
+                } else {
+                    const badge = card.querySelector('.notice-badge');
+                    const cardType = badge ? badge.classList[1].replace('badge-', '') : '';
+                    
+                    if (cardType === filterType) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }
+            });
+        });
+    });
+}
+
