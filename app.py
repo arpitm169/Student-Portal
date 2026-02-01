@@ -397,6 +397,89 @@ def get_attendance(user_id):
         "attendance": data
     })
 
+# ---------- RESULTS ----------
+@app.route("/results/<int:user_id>")
+def get_results(user_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT 
+            c.course_name,
+            r.internal_marks,
+            r.external_marks,
+            r.total_marks,
+            r.grade,
+            r.status
+        FROM results r
+        JOIN courses c ON r.course_id = c.course_id
+        WHERE r.user_id = %s
+        ORDER BY c.course_name
+    """, (user_id,))
+
+    results = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "results": results
+    })
+
+@app.route("/notices")
+def get_notices():
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT
+            notice_id,
+            title,
+            content,
+            posted_by,
+            notice_type,
+            is_pinned,
+            posted_at
+        FROM notices
+        WHERE is_active = TRUE
+        ORDER BY is_pinned DESC, posted_at DESC
+    """)
+
+    notices = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "notices": notices
+    })
+@app.route("/notices/latest")
+def get_latest_notices():
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT
+            title,
+            notice_type,
+            posted_at
+        FROM notices
+        WHERE is_active = TRUE
+        ORDER BY posted_at DESC
+        LIMIT 2
+    """)
+
+    notices = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "notices": notices
+    })
+
 
 
 # ---------- RUN ----------
