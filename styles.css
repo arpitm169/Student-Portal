@@ -1503,3 +1503,1129 @@ body {
         font-size: 1.5rem;
     }
 }
+/* ===============================
+   ENHANCED RESULTS PAGE STYLING - FORMAL ACADEMIC DESIGN
+   
+   Instructions: Add this CSS to your existing styles.css file
+   Replace the existing results section (lines 1520-1953) with this code
+================================ */
+
+/* ===============================
+   RESULTS PAGE HEADER & CONTAINER
+================================ */
+
+/* Result Page Animation */
+#result-page {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Page Title - Professional Academic Style */
+#result-page h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--foreground);
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid var(--primary);
+    position: relative;
+    display: inline-block;
+}
+
+#result-page h1::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 60%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary) 0%, transparent 100%);
+}
+
+/* Official Document Watermark */
+#result-page::before {
+    content: '🎓';
+    position: fixed;
+    font-size: 25rem;
+    opacity: 0.02;
+    right: -5rem;
+    bottom: -5rem;
+    z-index: 0;
+    pointer-events: none;
+    transform: rotate(-15deg);
+}
+
+/* ===============================
+   FORMAL ACADEMIC TABLE DESIGN
+================================ */
+
+#result-page .registration-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--card);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border);
+}
+
+/* Table Header - University Official Style with Gold Accent */
+#result-page .registration-table thead {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
+    position: relative;
+}
+
+#result-page .registration-table thead::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 50%, #fbbf24 100%);
+}
+
+#result-page .registration-table thead td {
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #ffffff;
+    padding: 1.5rem 2rem;
+    border-bottom: none;
+    text-align: left;
+    font-family: 'Inter', -apple-system, sans-serif;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+#result-page .registration-table thead td:first-child {
+    padding-left: 2.5rem;
+}
+
+/* Table Body - Clean Professional Rows */
+#result-page .registration-table tbody tr {
+    border-bottom: 1px solid #e5e7eb;
+    transition: all 0.25s ease;
+    background: #ffffff;
+}
+
+#result-page .registration-table tbody tr:nth-child(even) {
+    background: #f9fafb;
+}
+
+#result-page .registration-table tbody tr:hover {
+    background: #eff6ff;
+    box-shadow: inset 4px 0 0 var(--primary);
+    transform: scale(1.002);
+}
+
+#result-page .registration-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+/* Table Cell Styling */
+#result-page .registration-table tbody td {
+    padding: 1.5rem 2rem;
+    color: var(--foreground);
+    font-size: 1rem;
+    vertical-align: middle;
+    font-weight: 500;
+    transition: all 0.25s ease;
+}
+
+/* Course Name Column - Academic Emphasis with Icon */
+#result-page .registration-table tbody td:first-child {
+    font-weight: 700;
+    color: #1e3a8a;
+    font-size: 1.05rem;
+    padding-left: 2.5rem;
+    letter-spacing: 0.3px;
+}
+
+#result-page .registration-table tbody td:first-child::before {
+    
+    margin-right: 0.75rem;
+    font-size: 1.2rem;
+    vertical-align: middle;
+}
+
+/* Numeric Columns - Center Aligned with Serif Font */
+#result-page .registration-table tbody td:nth-child(2),
+#result-page .registration-table tbody td:nth-child(3),
+#result-page .registration-table tbody td:nth-child(4) {
+    text-align: center;
+    font-family: 'Georgia', serif;
+    font-weight: 600;
+}
+
+/* Grade and Status Columns - Center Aligned */
+#result-page .registration-table tbody td:nth-child(5),
+#result-page .registration-table tbody td:nth-child(6) {
+    text-align: center;
+}
+
+/* ===============================
+   ENHANCED GRADE BADGES
+   University Certificate Style
+================================ */
+
+.grade-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.65rem 1.25rem;
+    border-radius: 6px;
+    font-weight: 800;
+    font-size: 1.25rem;
+    min-width: 60px;
+    text-align: center;
+    letter-spacing: 1px;
+    position: relative;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    font-family: 'Georgia', serif;
+}
+
+.grade-badge::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent);
+    z-index: -1;
+}
+
+/* Grade O - Outstanding (Emerald Green) */
+.grade-badge.grade-o {
+    background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
+    color: white;
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Grade A+ - Excellent (Royal Blue) */
+.grade-badge.grade-a-plus {
+    background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #3b82f6 100%);
+    color: white;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Grade A - Very Good (Cyan Blue) */
+.grade-badge.grade-a {
+    background: linear-gradient(135deg, #0891b2 0%, #06b6d4 50%, #22d3ee 100%);
+    color: white;
+    box-shadow: 0 6px 16px rgba(6, 182, 212, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Grade B+ - Good (Amber) */
+.grade-badge.grade-b-plus {
+    background: linear-gradient(135deg, #d97706 0%, #f59e0b 50%, #fbbf24 100%);
+    color: white;
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Grade B - Satisfactory (Orange) */
+.grade-badge.grade-b {
+    background: linear-gradient(135deg, #ea580c 0%, #fb923c 50%, #fdba74 100%);
+    color: white;
+    box-shadow: 0 6px 16px rgba(251, 146, 60, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Grade F - Fail (Red) */
+.grade-badge.grade-f {
+    background: linear-gradient(135deg, #b91c1c 0%, #dc2626 50%, #ef4444 100%);
+    color: white;
+    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* ===============================
+   FORMAL STATUS BADGES
+   Official Document Style
+================================ */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    border: 2px solid currentColor;
+    position: relative;
+    overflow: hidden;
+}
+
+.status-badge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: left 0.3s ease;
+}
+
+.status-badge:hover::before {
+    left: 100%;
+}
+
+/* Pass Status - Green with Checkmark */
+.status-badge.status-pass {
+    background: #dcfce7;
+    color: #15803d;
+    border-color: #22c55e;
+}
+
+.status-badge.status-pass::after {
+    content: '✓';
+    font-weight: 900;
+    font-size: 1rem;
+}
+
+/* Fail Status - Red with Cross */
+.status-badge.status-fail {
+    background: #fee2e2;
+    color: #991b1b;
+    border-color: #ef4444;
+}
+
+.status-badge.status-fail::after {
+    content: '✗';
+    font-weight: 900;
+    font-size: 1rem;
+}
+
+/* ===============================
+   MARKS DISPLAY
+   Academic Record Style
+================================ */
+
+.marks-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.marks-primary {
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: #1e3a8a;
+    font-family: 'Georgia', serif;
+}
+
+.marks-breakdown {
+    font-size: 0.8rem;
+    color: #64748b;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+/* ===============================
+   RESULT SUMMARY CARDS
+   Professional Dashboard Style
+================================ */
+
+.result-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.result-summary-card {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-top: 4px solid var(--primary);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.result-summary-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(74, 90, 186, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(30%, -30%);
+}
+
+.result-summary-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.result-summary-card.overall {
+    border-top-color: #1e40af;
+}
+
+.result-summary-card.passed {
+    border-top-color: #10b981;
+}
+
+.result-summary-card.failed {
+    border-top-color: #ef4444;
+}
+
+.result-summary-card.average {
+    border-top-color: #f59e0b;
+}
+
+.summary-content {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.summary-label {
+    font-size: 0.75rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.summary-value {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--foreground);
+    line-height: 1;
+    font-family: 'Georgia', serif;
+}
+
+.summary-subtext {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-top: 0.75rem;
+    font-weight: 500;
+}
+
+/* ===============================
+   EMPTY STATE
+================================ */
+
+.result-empty-state {
+    text-align: center;
+    padding: 5rem 2rem;
+    background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+    border-radius: var(--radius);
+    margin-top: 2rem;
+    border: 2px dashed #cbd5e1;
+}
+
+.result-empty-state .empty-icon {
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.3;
+}
+
+.result-empty-state h3 {
+    font-size: 1.75rem;
+    color: var(--foreground);
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+}
+
+.result-empty-state p {
+    color: #64748b;
+    font-size: 1.05rem;
+}
+
+/* ===============================
+   RESULT DETAIL CARDS
+   (Optional - if you want detailed view)
+================================ */
+
+.result-details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.result-detail-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid var(--primary);
+    transition: all 0.3s ease;
+}
+
+.result-detail-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.detail-header h3 {
+    font-size: 1.125rem;
+    color: var(--foreground);
+    margin: 0;
+}
+
+.detail-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.detail-label {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detail-value {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+/* ===============================
+   PRINT STYLES
+   For Official Transcripts
+================================ */
+
+@media print {
+    #result-page .registration-table {
+        box-shadow: none;
+        border: 2px solid #000;
+    }
+    
+    #result-page .registration-table thead {
+        background: #1e3a8a !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .grade-badge, .status-badge {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+
+/* ===============================
+   RESPONSIVE DESIGN
+================================ */
+
+@media (max-width: 1024px) {
+    .result-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    #result-page .registration-table tbody td,
+    #result-page .registration-table thead td {
+        padding: 1.25rem 1.5rem;
+    }
+
+    .result-details-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    #result-page h1 {
+        font-size: 1.5rem;
+    }
+
+    .result-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-value {
+        font-size: 2.25rem;
+    }
+
+    #result-page .registration-table {
+        display: block;
+        overflow-x: auto;
+        border-radius: 8px;
+    }
+
+    #result-page .registration-table thead td,
+    #result-page .registration-table tbody td {
+        padding: 1rem 1.25rem;
+        font-size: 0.9rem;
+    }
+
+    #result-page .registration-table tbody td:first-child {
+        padding-left: 1.25rem;
+    }
+
+    #result-page .registration-table tbody td:first-child::before {
+        display: none; /* Hide icon on mobile */
+    }
+
+    .grade-badge {
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .status-badge {
+        padding: 0.4rem 1rem;
+        font-size: 0.7rem;
+    }
+
+    .detail-content {
+        grid-template-columns: 1fr;
+    }
+}
+/* ===============================
+   NOTICE PAGE
+================================ */
+
+/* ===============================
+   NOTICE PAGE - ENHANCED MODERN DESIGN
+   
+   Features:
+   - Gradient backgrounds for pinned notices
+   - Smooth hover animations
+   - Color-coded type badges with icons
+   - Better typography and spacing
+   - Responsive design
+   - Pulsing animations for important notices
+================================ */
+
+#notice-page {
+    max-width: 1200px;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#notice-page h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--foreground);
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid var(--primary);
+    position: relative;
+    display: inline-block;
+}
+
+#notice-page h1::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 60%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary) 0%, transparent 100%);
+}
+
+.notice-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* ===============================
+   NOTICE CARD CONTAINER
+================================ */
+
+.notice-card {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.notice-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: var(--primary);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.notice-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+    border-color: var(--primary);
+}
+
+.notice-card:hover::before {
+    opacity: 1;
+}
+
+/* ===============================
+   PINNED NOTICE SPECIAL STYLING
+================================ */
+
+.notice-card.pinned {
+    background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+    border-color: #f59e0b;
+    border-width: 2px;
+}
+
+.notice-card.pinned::before {
+    background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+    opacity: 1;
+    width: 8px;
+}
+
+.notice-card.pinned:hover {
+    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.2);
+}
+
+/* ===============================
+   NOTICE HEADER
+================================ */
+
+.notice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem 1.75rem 1rem 1.75rem;
+    background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+    border-bottom: 1px solid var(--border);
+}
+
+.notice-card.pinned .notice-header {
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+}
+
+.notice-title-wrapper {
+    flex: 1;
+}
+
+.notice-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--foreground);
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.notice-title-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+/* ===============================
+   PINNED BADGE
+================================ */
+
+.notice-pinned {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    padding: 0.375rem 0.875rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* ===============================
+   META INFO
+================================ */
+
+.notice-meta {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    padding: 0 1.75rem 1rem 1.75rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.notice-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.notice-meta-icon {
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.notice-meta strong {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* ===============================
+   CONTENT
+================================ */
+
+.notice-content {
+    padding: 1.25rem 1.75rem 1.5rem 1.75rem;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #374151;
+}
+
+.notice-card.pinned .notice-content {
+    background: white;
+}
+
+/* ===============================
+   TYPE BADGES
+================================ */
+
+.notice-badge-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
+
+.notice-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 2px solid currentColor;
+}
+
+.notice-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.notice-badge::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: blink 2s ease-in-out infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* ===============================
+   BADGE TYPE COLORS
+================================ */
+
+.badge-EXAM {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    color: #b91c1c;
+    border-color: #ef4444;
+}
+
+.badge-ACADEMIC {
+    background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+    color: #1e40af;
+    border-color: #3b82f6;
+}
+
+.badge-FEE {
+    background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+    color: #c2410c;
+    border-color: #f97316;
+}
+
+.badge-EVENT {
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    color: #047857;
+    border-color: #10b981;
+}
+
+.badge-PLACEMENT {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    color: #0369a1;
+    border-color: #0ea5e9;
+}
+
+.badge-GENERAL {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    color: #334155;
+    border-color: #64748b;
+}
+
+.badge-URGENT {
+    background: linear-gradient(135deg, #fee2e2 0%, #fca5a5 100%);
+    color: #991b1b;
+    border-color: #dc2626;
+    animation: urgentPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes urgentPulse {
+    0%, 100% { 
+        box-shadow: 0 2px 4px rgba(220, 38, 38, 0.1);
+    }
+    50% { 
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+    }
+}
+
+/* ===============================
+   EMPTY STATE
+================================ */
+
+.notice-empty-state {
+    text-align: center;
+    padding: 5rem 2rem;
+    background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+    border-radius: var(--radius);
+    border: 2px dashed var(--border);
+}
+
+.notice-empty-state .empty-icon {
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.3;
+}
+
+.notice-empty-state h3 {
+    font-size: 1.5rem;
+    color: var(--foreground);
+    margin-bottom: 0.75rem;
+}
+
+.notice-empty-state p {
+    color: var(--muted-foreground);
+    font-size: 1rem;
+}
+
+/* ===============================
+   FILTER/SORT SECTION (OPTIONAL)
+================================ */
+
+.notice-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--card);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.notice-filter-group {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.filter-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 2px solid var(--border);
+    background: white;
+    color: var(--foreground);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: white;
+}
+
+.filter-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* ===============================
+   NOTICE FOOTER (OPTIONAL)
+================================ */
+
+.notice-footer {
+    padding: 1rem 1.75rem;
+    background: #f9fafb;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notice-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.notice-action-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--foreground);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.notice-action-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* ===============================
+   RESPONSIVE DESIGN
+================================ */
+
+@media (max-width: 768px) {
+    #notice-page h1 {
+        font-size: 1.5rem;
+    }
+
+    .notice-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.25rem 1.25rem 0.75rem 1.25rem;
+    }
+
+    .notice-badge-wrapper {
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .notice-title {
+        font-size: 1.125rem;
+    }
+
+    .notice-meta {
+        padding: 0 1.25rem 0.75rem 1.25rem;
+        font-size: 0.8rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .notice-content {
+        padding: 1rem 1.25rem 1.25rem 1.25rem;
+        font-size: 0.9rem;
+    }
+
+    .notice-controls {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .notice-filter-group {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .notice-footer {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .notice-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+/* ===============================
+   DARK MODE SUPPORT (OPTIONAL)
+================================ */
+
+@media (prefers-color-scheme: dark) {
+    .notice-card {
+        background: #1e293b;
+        border-color: #334155;
+    }
+
+    .notice-header {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        border-bottom-color: #334155;
+    }
+
+    .notice-content {
+        color: #cbd5e1;
+    }
+
+    .notice-meta {
+        color: #94a3b8;
+    }
+}
