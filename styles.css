@@ -1,6 +1,4 @@
-/* ===============================
-   CSS VARIABLES & RESET
-================================ */
+
 
 :root {
     --background: #f5f7fb;
@@ -60,60 +58,243 @@ body {
 }
 
 /* ===============================
-   LOGIN PAGE
+   LOGIN PAGE — Dark left / Purple right
 ================================ */
 .login-container {
     min-height: 100vh;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #1a1a2a;
 }
 
-.login-header {
-    text-align: center;
-    margin-bottom: 2rem;
-    color: white;
+.login-header { display: none; }
+
+/* Full-screen split card */
+.login-card {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: none;
+    padding: 0;
 }
 
-.login-icon {
-    width: 4rem;
-    height: 4rem;
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
+#login-card,
+#register-card {
+    display: flex !important;
+    flex-direction: row;
+    width: 100%;
+    min-height: 100vh;
+    border-radius: 0;
+    padding: 0;
+}
+
+#login-card.hidden,
+#register-card.hidden {
+    display: none !important;
+}
+
+/* ---- LEFT DARK PANEL ---- */
+.login-form-panel {
+    flex: 0 0 42%;
+    background: #1c1c2e;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 16px;
-    margin: 0 auto 1rem;
-    font-size: 2rem;
-    backdrop-filter: blur(10px);
+    padding: 3rem 3.5rem;
 }
 
-.login-header h1 {
-    color: white;
-    margin-bottom: 0.5rem;
-}
-
-.login-header p {
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.login-card {
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 2rem;
+.login-form-inner {
     width: 100%;
-    max-width: 420px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 340px;
 }
 
-.login-card h2 {
-    margin-bottom: 1.5rem;
-    color: var(--foreground);
+.login-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.5px;
 }
 
+.login-subtitle {
+    font-size: 0.9rem;
+    color: #888aaa;
+    margin-bottom: 2.2rem;
+}
+
+/* Underline inputs on dark bg */
+.login-field {
+    border-bottom: 1.5px solid #3a3a55;
+    margin-bottom: 1.6rem;
+    transition: border-color 0.3s;
+}
+
+.login-field:focus-within {
+    border-bottom-color: #a855f7;
+}
+
+.login-field input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0.7rem 0;
+    font-size: 0.95rem;
+    color: #ccccdd;
+    font-family: 'Inter', sans-serif;
+}
+
+.login-field input::placeholder {
+    color: #555577;
+}
+
+.error-message {
+    display: none;
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.1);
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+}
+
+.error-message.show { display: block; }
+
+/* Bottom sign-up row */
+.login-bottom {
+    margin-top: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #666688;
+}
+
+.signup-link {
+    background: #2e2e45;
+    color: #ccccee;
+    padding: 0.45rem 1.1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: background 0.2s;
+    border: 1px solid #44446a;
+}
+
+.signup-link:hover {
+    background: #3a3a5a;
+}
+
+/* ---- RIGHT PURPLE PANEL ---- */
+.login-illus-panel {
+    flex: 1;
+    background: #8b5cf6;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 3.5rem 3.5rem 0;
+}
+
+/* Large soft blobs for depth */
+.illus-blob {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    pointer-events: none;
+}
+.b1 { width: 420px; height: 420px; bottom: -80px; left: -80px; }
+.b2 { width: 280px; height: 280px; top: 40%; right: -60px; background: rgba(255,255,255,0.05); }
+
+.illus-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.illus-heading {
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    line-height: 1.15;
+    color: #ffffff;
+    margin-bottom: 0.8rem;
+    font-weight: 400;
+    letter-spacing: -1px;
+}
+
+.illus-heading strong {
+    font-weight: 800;
+}
+
+.illus-sub {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 0;
+}
+
+/* Emoji scene — sits below the text, anchored to bottom */
+.illus-emoji-scene {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 2rem;
+    padding: 0 1rem;
+    margin-top: auto;
+}
+
+.illus-person {
+    font-size: 7rem;
+    line-height: 1;
+    filter: drop-shadow(0 -4px 20px rgba(0,0,0,0.2));
+    flex-shrink: 0;
+}
+
+.illus-person.p1 { font-size: 6rem; }
+.illus-person.p2 { font-size: 7.5rem; }
+
+.illus-document {
+    font-size: 9rem;
+    line-height: 1;
+    filter: drop-shadow(0 -4px 24px rgba(0,0,0,0.15));
+    flex-shrink: 0;
+}
+
+.illus-plant {
+    font-size: 5rem;
+    line-height: 1;
+    filter: drop-shadow(0 -2px 12px rgba(0,0,0,0.2));
+    flex-shrink: 0;
+}
+
+/* Override btn-primary for the dark panel */
+.login-form-panel .btn-primary {
+    background: #9333ea;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+.login-form-panel .btn-primary:hover {
+    background: #7c3aed;
+    box-shadow: 0 4px 20px rgba(147, 51, 234, 0.4);
+    transform: translateY(-1px);
+}
+
+/* Keep form-group styles for dashboard pages */
 .form-group {
     margin-bottom: 1.25rem;
 }
@@ -141,23 +322,9 @@ body {
     box-shadow: 0 0 0 3px rgba(74, 90, 186, 0.1);
 }
 
-.error-message {
-    display: none;
-    color: #ef4444;
-    background: rgba(239, 68, 68, 0.1);
-    padding: 0.75rem;
-    margin-bottom: 1rem;
-    border-radius: 8px;
-    font-size: 0.875rem;
-}
-
-.error-message.show {
-    display: block;
-}
-
 .login-hint {
     text-align: center;
-    margin-top: 1.5rem;
+    margin-top: 1.2rem;
     font-size: 0.875rem;
     color: var(--muted-foreground);
 }
@@ -182,14 +349,15 @@ body {
 }
 
 .btn-primary {
-    background: var(--primary);
+    background: #1565c0;
     color: white;
+    letter-spacing: 0.5px;
 }
 
 .btn-primary:hover {
-    background: var(--primary-dark);
+    background: #0d47a1;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(74, 90, 186, 0.3);
+    box-shadow: 0 4px 12px rgba(21, 101, 192, 0.35);
 }
 
 .btn-full {
