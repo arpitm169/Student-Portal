@@ -181,6 +181,10 @@ if (page === "result") {
 if (page === "notice") {
     loadNotices();
 }
+if (page === "schedule") {
+    loadSchedule();
+}
+
 
 
 
@@ -209,6 +213,8 @@ if (page === "notice") {
 
         navItems.forEach(n => n.classList.remove("active"));
         navItems[0]?.classList.add("active");
+        
+
     }
 
     /* ========= DASHBOARD ========= */
@@ -222,10 +228,11 @@ if (page === "notice") {
             getInitials(loggedInUser.name);
 
         await Promise.all([
-            loadFinanceData(),
-            loadEnrolledCourses(),
-            loadInstructors()
-        ]);
+    loadFinanceData(),
+    loadEnrolledCourses(),
+    loadAttendanceSummary()
+]);
+
     }
 
     /* ========= FINANCE ========= */
@@ -807,103 +814,98 @@ async function loadResults() {
         console.error("Failed to load results");
     }
 }
+
 // Enhanced loadNotices function with better structure
 async function loadNotices() {
     try {
         const res = await fetch("/notices");
         const data = await res.json();
 
-        const container = document.getElementById("notice-list");
+        const container = document.getElementById("notice-container");
         container.innerHTML = "";
 
-        if (!data.notices || data.notices.length === 0) {
-            container.innerHTML = `
-                <div class="notice-empty-state">
-                    <div class="empty-icon">📢</div>
-                    <h3>No Notices Available</h3>
-                    <p>There are currently no notices to display. Check back later for updates.</p>
-                </div>
-            `;
-            return;
-        }
-
-        // Get icon for notice type
-        const getTypeIcon = (type) => {
-            const icons = {
-                'EXAM': '📝',
-                'ACADEMIC': '📚',
-                'FEE': '💰',
-                'EVENT': '🎉',
-                'PLACEMENT': '💼',
-                'GENERAL': '📢',
-                'URGENT': '⚠️'
-            };
-            return icons[type] || '📢';
-        };
-
-        // Format date nicely
-        const formatDate = (dateString) => {
-            const date = new Date(dateString);
-            const options = { 
-                year: 'numeric', 
-                month: 'short', 
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            };
-            return date.toLocaleDateString('en-US', options);
-        };
-
         data.notices.forEach(n => {
-            const pinnedClass = n.is_pinned ? 'pinned' : '';
-            const typeIcon = getTypeIcon(n.notice_type);
-            
             container.innerHTML += `
-                <div class="notice-card ${pinnedClass}">
-                    <div class="notice-header">
-                        <div class="notice-title-wrapper">
-                            <div class="notice-title">
-                                <span class="notice-title-icon">${typeIcon}</span>
-                                ${n.title}
-                            </div>
-                        </div>
-                        
-                        <div class="notice-badge-wrapper">
-                            <span class="notice-badge badge-${n.notice_type}">
-                                ${n.notice_type}
-                            </span>
-                            ${n.is_pinned ? '<span class="notice-pinned">📌 PINNED</span>' : ''}
-                        </div>
-                    </div>
-
-                    <div class="notice-meta">
-                        <div class="notice-meta-item">
-                            <span class="notice-meta-icon">👤</span>
-                            Posted by <strong>${n.posted_by}</strong>
-                        </div>
-                        <div class="notice-meta-item">
-                            <span class="notice-meta-icon">📅</span>
-                            ${formatDate(n.posted_at)}
-                        </div>
-                    </div>
-
-                    <div class="notice-content">
-                        ${n.content}
+                <div class="notice-card ${n.is_pinned ? "pinned" : ""}">
+                    <div class="notice-icon">${n.icon}</div>
+                    <div class="notice-body">
+                        <span class="notice-type">${n.notice_type}</span>
+                        <h3>${n.title}</h3>
+                        <p>${n.content}</p>
+                        <small>${new Date(n.posted_at).toLocaleDateString()}</small>
                     </div>
                 </div>
             `;
         });
+    } catch {
+        console.error("Failed to load notices");
+    }
+}
 
-    } catch (err) {
-        console.error("Failed to load notices", err);
-        const container = document.getElementById("notice-list");
-        container.innerHTML = `
-            <div class="notice-empty-state">
-                <div class="empty-icon">⚠️</div>
-                <h3>Error Loading Notices</h3>
-                <p>Unable to load notices at this time. Please try again later.</p>
-            </div>
-        `;
+async function loadSchedule() {
+    try {
+        const res = await fetch(`/schedule/${loggedInUser.id}`);
+        const data = await res.json();
+
+        const grid = document.getElementById("schedule-grid");
+        if (!grid) return;
+        grid.innerHTML = "";
+
+        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+        const dayInitials = { Monday:"Mo", Tuesday:"Tu", Wednesday:"We", Thursday:"Th", Friday:"Fr" };
+
+        // Group by day
+        const grouped = {};
+        days.forEach(d => grouped[d] = []);
+        data.schedule.forEach(s => {
+            if (grouped[s.day_of_week]) grouped[s.day_of_week].push(s);
+        });
+
+        const colors = ["sched-color-0","sched-color-1","sched-color-2","sched-color-3","sched-color-4","sched-color-5"];
+
+        days.forEach(day => {
+            const items = grouped[day];
+            const count = items.length;
+
+            let itemsHTML = "";
+            if (count === 0) {
+                itemsHTML = `
+                    <div class="sched-empty">
+                        <span class="sched-empty-icon">🌙</span>
+                        No classes
+                    </div>`;
+            } else {
+                items.forEach((item, i) => {
+                    const colorClass = colors[i % colors.length];
+                    // Format time: "08:00:00" → "08:00 AM"
+                    const fmt = t => {
+                        const [h, m] = t.split(":");
+                        const hr = parseInt(h);
+                        return `${hr > 12 ? hr - 12 : hr || 12}:${m} ${hr >= 12 ? "PM" : "AM"}`;
+                    };
+                    itemsHTML += `
+                        <div class="schedule-item ${colorClass}">
+                            <span class="sched-item-icon">${item.course_icon || "📘"}</span>
+                            <span class="sched-item-name">${item.course_name}</span>
+                            <span class="sched-item-time">🕐 ${fmt(item.start_time)} – ${fmt(item.end_time)}</span>
+                            ${item.room ? `<span class="sched-item-room">📍 ${item.room}</span>` : ""}
+                        </div>`;
+                });
+            }
+
+            grid.innerHTML += `
+                <div class="schedule-day">
+                    <div class="sched-day-header">
+                        <span class="sched-day-name">${day}</span>
+                        <span class="sched-day-initial">${dayInitials[day]}</span>
+                        <span class="sched-class-count">${count} class${count !== 1 ? "es" : ""}</span>
+                    </div>
+                    <div class="sched-items">${itemsHTML}</div>
+                </div>`;
+        });
+
+    } catch (e) {
+        console.error("Failed to load schedule", e);
     }
 }
 
@@ -939,4 +941,61 @@ function initNoticeFilters() {
         });
     });
 }
+async function loadAttendanceSummary() {
+    try {
+        const res = await fetch(`/attendance/${loggedInUser.id}`);
+        const data = await res.json();
+
+        if (!data.attendance || data.attendance.length === 0) return;
+
+        let totalClasses = 0;
+        let attended = 0;
+
+        data.attendance.forEach(a => {
+            totalClasses += a.total_classes;
+            attended += a.attended_classes;
+        });
+
+        const percent = totalClasses > 0
+            ? Math.round((attended / totalClasses) * 100)
+            : 0;
+
+        const absent = totalClasses - attended;
+        const deg = (percent / 100) * 360;
+
+        // Set the conic-gradient angle via CSS variable
+        document.querySelector(".attendance-circle")
+            .style.setProperty("--attendance-deg", deg + "deg");
+
+        document.getElementById("attendance-percentage").textContent = percent + "%";
+
+        let status = "Good Standing 🎉";
+        if (percent < 75) status = "⚠️ Low Attendance";
+        else if (percent < 85) status = "⚡ Needs Improvement";
+
+        document.getElementById("attendance-status").textContent = status;
+
+        // Add legend if not already present
+        const card = document.getElementById("attendance-summary-card");
+        if (!card.querySelector(".attendance-legend")) {
+            card.insertAdjacentHTML("beforeend", `
+                <div class="attendance-legend">
+                    <span>
+                        <span class="legend-dot" style="background:#4caf50;"></span>
+                        Present: ${attended}
+                    </span>
+                    <span>
+                        <span class="legend-dot" style="background:#ef4444;"></span>
+                        Absent: ${absent}
+                    </span>
+                </div>
+            `);
+        }
+
+    } catch (e) {
+        console.error("Failed to load attendance summary");
+    }
+}
+
+
 
