@@ -115,7 +115,7 @@
     <!-- SIDEBAR -->
     <aside id="sidebar">
         <div class="sidebar-logo">
-            <div class="logo-icon">🎓</div>
+            <div class="logo-icon">👩🏻‍🎓</div>
         </div>
 
         <nav class="sidebar-nav">
@@ -183,69 +183,85 @@
         <main id="main-content">
 
             <!-- DASHBOARD PAGE -->
-            <div id="dashboard-page" class="page active">
-                <div class="dashboard-header">
-                    <div class="header-card">
-                        <div class="date-info">
-                            <span id="current-date">January 24, 2026</span>
-                        </div>
-                        <div class="welcome-section">
-                            <h1>Welcome back, <span id="student-name">John</span>!</h1>
-                            
-                        </div>
-                        <div class="header-illustration">
-                            <div class="illustration-placeholder">🎨</div>
-                        </div>
-                    </div>
+            <!-- DASHBOARD PAGE -->
+<div id="dashboard-page" class="page active">
+
+    <div class="dashboard-header">
+        <div class="header-card">
+            <div class="date-info">
+                <span id="current-date">January 24, 2026</span>
+            </div>
+            <div class="welcome-section">
+                <h1>Welcome back, <span id="student-name">John</span>!</h1>
+            </div>
+            <div class="header-illustration">
+                <div class="illustration-placeholder">🎨</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+
+        <!-- LEFT COLUMN -->
+        <div class="left-column">
+
+            <div class="section-header">
+                <h2>Finance</h2>
+            </div>
+
+            <div class="finance-cards">
+                <div class="finance-card">
+                    <div class="finance-icon">💰</div>
+                    <div class="finance-amount" id="total-amount">—</div>
+                    <div class="finance-label">Total Amount</div>
                 </div>
 
-                <div class="dashboard-grid">
-                    <!-- LEFT COLUMN -->
-                    <div class="left-column">
-                        <!-- FINANCE SECTION -->
-                        <div class="section-header">
-                            <h2>Finance</h2>
-                        </div>
+                <div class="finance-card highlighted">
+                    <div class="finance-icon">💵</div>
+                    <div class="finance-amount" id="paid-amount">—</div>
+                    <div class="finance-label">Paid</div>
+                </div>
 
-                        <div class="finance-cards">
-                            <div class="finance-card">
-                                <div class="finance-icon">💰</div>
-                                <div class="finance-amount" id="total-amount">—</div>
-                                <div class="finance-label">Total Amount</div>
-                            </div>
-
-                            <div class="finance-card highlighted">
-                                <div class="finance-icon">💵</div>
-                                <div class="finance-amount" id="paid-amount">—</div>
-                                <div class="finance-label">Paid</div>
-                            </div>
-
-                            <div class="finance-card">
-                                <div class="finance-icon">📊</div>
-                                <div class="finance-amount" id="overdue-amount">—</div>
-                                <div class="finance-label">Overdue</div>
-                            </div>
-                        </div>
-
-                        <!-- ENROLLED COURSES -->
-                        <div class="section-header">
-                            <h2>Enrolled Courses</h2>
-                            <a href="#" class="see-all">See all</a>
-                        </div>
-                        <div id="enrolled-courses-grid" class="courses-grid"></div>
-
-                    </div>
-
-                    <!-- RIGHT COLUMN -->
-                    <div class="right-column">
-                        <div class="section-header">
-                            <h2>Course Instructors</h2>
-                            <a href="#" class="see-all">See all</a>
-                        </div>
-                        <div class="instructors-section"></div>
-                    </div>
+                <div class="finance-card">
+                    <div class="finance-icon">📊</div>
+                    <div class="finance-amount" id="overdue-amount">—</div>
+                    <div class="finance-label">Overdue</div>
                 </div>
             </div>
+
+            <div class="section-header">
+                <h2>Enrolled Courses</h2>
+                <a href="#" class="see-all">See all</a>
+            </div>
+
+            <div id="enrolled-courses-grid" class="courses-grid"></div>
+
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="right-column">
+
+            <div class="section-header">
+                <h2>📊 Attendance Overview</h2>
+            </div>
+
+            <div id="attendance-summary-card" class="attendance-summary-card">
+                <div class="attendance-circle">
+                    <span id="attendance-percentage">--%</span>
+                </div>
+
+                <div class="attendance-details">
+                    <p id="attendance-status">Loading...</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div> <!-- dashboard-grid -->
+
+</div> <!-- dashboard-page -->
+
+
 
             <!-- PAYMENT PAGE -->
 <div id="payment-page" class="page">
@@ -377,11 +393,17 @@
 <!-- NOTICE PAGE -->
 <div id="notice-page" class="page">
        <h1>📢 Notices & Announcements</h1>
+       <div id="notice-container" class="notice-feed"></div>
 
-    <div id="notice-list" class="notice-list">
-        <!-- Notices will load here -->
-    </div>
 </div>
+
+    <!-- SCHEDULE PAGE -->
+<div id="schedule-page" class="page">
+    <h1>🗓️ Weekly Timetable</h1>
+
+    <div id="schedule-grid" class="schedule-grid"></div>
+</div>
+
 
 
 
