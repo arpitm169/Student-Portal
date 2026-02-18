@@ -426,23 +426,23 @@ def get_results(user_id):
         "results": results
     })
 
+
 @app.route("/notices")
 def get_notices():
     conn = get_db_connection()
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT
-            notice_id,
-            title,
-            content,
-            posted_by,
-            notice_type,
-            is_pinned,
-            posted_at
+        SELECT notice_id,
+               title,
+               content,
+               notice_type,
+               is_pinned,
+               icon,
+               posted_at
         FROM notices
         WHERE is_active = TRUE
-        ORDER BY is_pinned DESC, posted_at DESC
+        ORDER BY is_pinned DESC, priority DESC, posted_at DESC
     """)
 
     notices = cur.fetchall()
@@ -454,31 +454,51 @@ def get_notices():
         "success": True,
         "notices": notices
     })
-@app.route("/notices/latest")
-def get_latest_notices():
+# ---------- SCHEDULE ----------
+@app.route("/schedule/<int:user_id>")
+def get_schedule(user_id):
     conn = get_db_connection()
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT
-            title,
-            notice_type,
-            posted_at
-        FROM notices
-        WHERE is_active = TRUE
-        ORDER BY posted_at DESC
-        LIMIT 2
-    """)
+        SELECT 
+            c.course_name,
+            c.course_icon,
+            s.day_of_week,
+            s.start_time,
+            s.end_time,
+            s.room
+        FROM schedule s
+        JOIN courses c ON s.course_id = c.course_id
+        JOIN enrollments e ON e.course_id = c.course_id
+        WHERE e.user_id = %s
+        ORDER BY 
+            CASE s.day_of_week
+                WHEN 'Monday' THEN 1
+                WHEN 'Tuesday' THEN 2
+                WHEN 'Wednesday' THEN 3
+                WHEN 'Thursday' THEN 4
+                WHEN 'Friday' THEN 5
+            END,
+            s.start_time
+    """, (user_id,))
 
-    notices = cur.fetchall()
+    data = cur.fetchall()
+   
+    for row in data:
+        row["start_time"] = str(row["start_time"])
+        row["end_time"] = str(row["end_time"])
+
 
     cur.close()
     conn.close()
 
     return jsonify({
         "success": True,
-        "notices": notices
+        "schedule": data
     })
+
+
 
 
 
