@@ -77,13 +77,6 @@ Mac/Linux:
 source venv/bin/activate
 ```
 
-5. Install dependencies:
-
-```
-pip install -r requirements.txt
-```
-
----
 
 ## Running the Application
 
