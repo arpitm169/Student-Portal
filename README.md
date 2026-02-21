@@ -32,32 +32,14 @@ This project focuses on clean design, usability, and maintainable code structure
 
 * Python (Flask)
 
+**Database**
+
+* PostgreSQL
+
 **Other Tools**
 
 * Jinja2 Templates
 * Git and GitHub for version control
-
----
-
-## Project Structure
-
-```
-student-portal/
-│
-├── static/
-│   ├── css/
-│   ├── js/
-│   └── images/
-│
-├── templates/
-│   ├── index.html
-│   ├── dashboard.html
-│   └── ...
-│
-├── app.py
-├── requirements.txt
-└── README.md
-```
 
 ---
 
@@ -66,7 +48,7 @@ student-portal/
 1. Clone the repository:
 
 ```
-git clone https://github.com/your-username/student-portal.git
+git clone https://github.com/arpitm169/Student-Portal.git
 ```
 
 2. Navigate to the project folder:
@@ -119,30 +101,9 @@ http://127.0.0.1:5000
 
 ---
 
-## Configuration
-
-* Update secret keys and environment variables before deploying to production.
-* Modify template files inside the `templates` folder to customize UI components.
-* Static assets such as stylesheets and images can be managed in the `static` directory.
-
----
-
 ## Future Enhancements
 
 * Role-based access control
-* Database integration
 * Attendance tracking system
 * Assignment and result modules
 * Notification system
-
----
-
-## Contributing
-
-Contributions are welcome. Please fork the repository, create a feature branch, and submit a pull request with clear documentation of changes.
-
----
-
-## License
-
-This project is intended for educational purposes. Add an appropriate open-source license if distributing publicly.
