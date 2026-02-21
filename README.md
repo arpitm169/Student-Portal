@@ -14,10 +14,10 @@ This project focuses on clean design, usability, and maintainable code structure
 * Dashboard with academic updates
 * Notice and announcement system
 * Student profile management
+* Attendance management module
+* Result and notification system
 * Responsive user interface
-* Structured backend integration
-* Scalable and modular project architecture
-
+* 
 ---
 
 ## Tech Stack
@@ -47,19 +47,19 @@ This project focuses on clean design, usability, and maintainable code structure
 
 1. Clone the repository:
 
-```
+```id="0u4h0v"
 git clone https://github.com/arpitm169/Student-Portal.git
 ```
 
 2. Navigate to the project folder:
 
-```
+```id="9nn1ml"
 cd Student-Portal
 ```
 
 3. Create a virtual environment:
 
-```
+```id="n7p4jq"
 python -m venv venv
 ```
 
@@ -67,28 +67,29 @@ python -m venv venv
 
 Windows:
 
-```
+```id="quz00o"
 venv\Scripts\activate
 ```
 
 Mac/Linux:
 
-```
+```id="pj3bko"
 source venv/bin/activate
 ```
 
+---
 
 ## Running the Application
 
 Start the development server:
 
-```
+```id="49mt41"
 python app.py
 ```
 
 Open your browser and visit:
 
-```
+```id="zoy0f5"
 http://127.0.0.1:5000
 ```
 
@@ -96,7 +97,7 @@ http://127.0.0.1:5000
 
 ## Future Enhancements
 
-* Role-based access control
-* Attendance tracking system
-* Assignment and result modules
-* Notification system
+* Admin portal with role-based management
+* Resume analyser module for profile evaluation
+* Advanced analytics dashboard
+* Improved access control and system scalability
