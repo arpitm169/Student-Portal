@@ -54,7 +54,7 @@ git clone https://github.com/arpitm169/Student-Portal.git
 2. Navigate to the project folder:
 
 ```
-cd student-portal
+cd Student-Portal
 ```
 
 3. Create a virtual environment:
