@@ -103,3 +103,6 @@ http://127.0.0.1:5000
 * Improved access control and system scalability
 ---
 ![Student Portal Screenshot](./Screenshot%202026-02-21%20175523.png)
+
+---
+![Student Portal Screenshot](./Screenshot%202026-02-21%20175812.png)
