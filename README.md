@@ -1,6 +1,6 @@
 # Student Portal
 
-## Overview
+## Overview 
 
 The Student Portal is a web-based application designed to simplify academic management for students and administrators. It provides a centralized platform for accessing academic information, managing profiles, viewing notices, and interacting with institutional resources in an organized and secure environment.
 
