@@ -265,94 +265,203 @@
 
             <!-- PAYMENT PAGE -->
 <div id="payment-page" class="page">
-    <h1>Payment Information</h1>
+    <h1>💳 Payment Information</h1>
 
-    <p><strong>Total Fees:</strong> ₹300,000</p>
+    <!-- Fee Summary Card -->
+    <div class="pay-summary-card">
+        <div class="pay-summary-header">
+            <span class="pay-summary-title">Fee Summary</span>
+            <span class="pay-summary-badge" id="pay-status-badge">Loading...</span>
+        </div>
+        <div class="pay-summary-grid">
+            <div class="pay-stat">
+                <span class="pay-stat-icon">💰</span>
+                <div class="pay-stat-info">
+                    <span class="pay-stat-value" id="pay-total">—</span>
+                    <span class="pay-stat-label">Total Fees</span>
+                </div>
+            </div>
+            <div class="pay-stat">
+                <span class="pay-stat-icon">✅</span>
+                <div class="pay-stat-info">
+                    <span class="pay-stat-value" id="pay-paid">—</span>
+                    <span class="pay-stat-label">Paid</span>
+                </div>
+            </div>
+            <div class="pay-stat">
+                <span class="pay-stat-icon">⏳</span>
+                <div class="pay-stat-info">
+                    <span class="pay-stat-value" id="pay-remaining">—</span>
+                    <span class="pay-stat-label">Remaining</span>
+                </div>
+            </div>
+        </div>
+        <!-- Progress Bar -->
+        <div class="pay-progress-wrapper">
+            <div class="pay-progress-bar">
+                <div class="pay-progress-fill" id="pay-progress-fill"></div>
+            </div>
+            <span class="pay-progress-label" id="pay-progress-label">0% paid</span>
+        </div>
+    </div>
 
-    <label>Enter Amount to Pay</label><br>
-    <input
-        type="number"
-        id="pay-amount"
-        placeholder="Enter amount"
-        style="width:300px;padding:10px;margin:10px 0;"
-    />
+    <!-- Payment Method Selector -->
+    <div class="pay-method-section">
+        <h2>Select Payment Method</h2>
+        <div class="pay-method-grid">
+            <div class="pay-method-card selected" data-method="Card">
+                <span class="pay-method-icon">💳</span>
+                <span class="pay-method-name">Card</span>
+                <span class="pay-method-check">✓</span>
+            </div>
+            <div class="pay-method-card" data-method="UPI">
+                <span class="pay-method-icon">📱</span>
+                <span class="pay-method-name">UPI</span>
+                <span class="pay-method-check">✓</span>
+            </div>
+            <div class="pay-method-card" data-method="Net Banking">
+                <span class="pay-method-icon">🏦</span>
+                <span class="pay-method-name">Net Banking</span>
+                <span class="pay-method-check">✓</span>
+            </div>
+        </div>
+    </div>
 
-    <br>
+    <!-- Amount Input -->
+    <div class="pay-input-section">
+        <label for="pay-amount">Enter Amount to Pay</label>
+        <div class="pay-input-wrapper">
+            <span class="pay-currency">₹</span>
+            <input type="number" id="pay-amount" placeholder="0.00" min="1" />
+        </div>
+        <button class="btn btn-primary" id="pay-btn">
+            <span id="pay-btn-text">Pay Now</span>
+            <span id="pay-btn-loader" class="pay-loader hidden"></span>
+        </button>
+        <p id="payment-msg"></p>
+    </div>
 
-    <button class="btn btn-primary" id="pay-btn">
-        Pay
-    </button>
-
-    <p id="payment-msg" style="margin-top:10px;"></p>
+    <!-- Payment History -->
+    <div class="pay-history-section">
+        <h2>Payment History</h2>
+        <div class="pay-history-table-wrap">
+            <table class="pay-history-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Method</th>
+                        <th>Receipt</th>
+                    </tr>
+                </thead>
+                <tbody id="pay-history-body">
+                    <tr><td colspan="5" style="text-align:center;">No payments yet</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 
 <!-- REGISTRATION PAGE -->
 <div id="registration-page" class="page">
-    <h1>Student Profile</h1>
-
-    <!-- Profile Header -->
-    <div class="registration-header">
-        <div class="registration-avatar-section">
-            <div class="registration-avatar" id="profile-avatar">
-                👤
+    
+    <!-- Hero Profile Header -->
+    <div class="profile-hero-card">
+        <div class="profile-hero-decorations">
+            <div class="hero-blob h1"></div>
+            <div class="hero-blob h2"></div>
+        </div>
+        <div class="profile-hero-content">
+            <div class="profile-hero-avatar" id="profile-avatar">👤</div>
+            <div class="profile-hero-info">
+                <h1 id="profile-name-display">—</h1>
+                <span class="profile-hero-role">Student</span>
             </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats Row -->
+    <div class="profile-stats-grid">
+        <div class="profile-stat-card">
+            <span class="stat-icon">🎓</span>
+            <div class="stat-details">
+                <span class="stat-label">Registration No</span>
+                <span class="stat-value" id="profile-regno-display">—</span>
+            </div>
+        </div>
+        <div class="profile-stat-card">
+            <span class="stat-icon">🏛️</span>
+            <div class="stat-details">
+                <span class="stat-label">Department</span>
+                <span class="stat-value" id="profile-dept-display">—</span>
+            </div>
+        </div>
+        <div class="profile-stat-card">
+            <span class="stat-icon">📅</span>
+            <div class="stat-details">
+                <span class="stat-label">Year</span>
+                <span class="stat-value" id="profile-year-display">—</span>
+            </div>
+        </div>
+        <div class="profile-stat-card">
+            <span class="stat-icon">📊</span>
+            <div class="stat-details">
+                <span class="stat-label">CGPA</span>
+                <span class="stat-value" id="profile-cgpa-display">—</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Form -->
+    <div class="profile-form-container">
+        <div class="profile-form-header">
+            <h2>Profile Details</h2>
+            <button class="btn-profile-edit" id="edit-registration">
+                ✏️ Edit Profile
+            </button>
+        </div>
+
+        <div class="profile-form-grid">
+            <div class="profile-form-group">
+                <label>Full Name</label>
+                <input type="text" id="reg-name-profile" disabled />
+            </div>
+            <div class="profile-form-group">
+                <label>Phone Number</label>
+                <input type="text" id="reg-phone" disabled />
+            </div>
+            <div class="profile-form-group">
+                <label>Registration No</label>
+                <input type="text" id="reg-no" disabled />
+            </div>
+            <div class="profile-form-group">
+                <label>Department</label>
+                <input type="text" id="reg-department" disabled />
+            </div>
+            <div class="profile-form-group">
+                <label>Year</label>
+                <input type="text" id="reg-year" disabled />
+            </div>
+            <div class="profile-form-group">
+                <label>CGPA</label>
+                <input type="text" id="reg-cgpa" disabled />
+            </div>
+        </div>
+
+        <!-- Action Buttons (Visible only while editing) -->
+        <div class="profile-edit-actions hidden" id="profile-edit-actions">
+            <button class="btn-profile-cancel" id="cancel-registration">Cancel</button>
+            <button class="btn btn-primary" id="save-registration">
+                <span id="save-btn-text">Save Changes</span>
+                <span id="save-btn-loader" class="pay-loader hidden"></span>
+            </button>
         </div>
         
-        <div class="registration-info-section">
-            <div class="student-name-display" id="profile-name-display">John Doe</div>
-            <div class="student-quick-info">
-                <div class="quick-info-item">
-                    <span class="quick-info-label">Registration No:</span>
-                    <span class="quick-info-value" id="profile-regno-display">—</span>
-                </div>
-                <div class="quick-info-item">
-                    <span class="quick-info-label">Department:</span>
-                    <span class="quick-info-value" id="profile-dept-display">—</span>
-                </div>
-                <div class="quick-info-item">
-                    <span class="quick-info-label">Year:</span>
-                    <span class="quick-info-value" id="profile-year-display">—</span>
-                </div>
-            </div>
-        </div>
+        <div id="registration-msg"></div>
     </div>
 
-    <!-- Details Table -->
-    <table class="registration-table">
-        <tr>
-            <td>Name</td>
-            <td><input type="text" id="reg-name-profile" disabled /></td>
-        </tr>
-        <tr>
-            <td>Registration No</td>
-            <td><input type="text" id="reg-no" disabled /></td>
-        </tr>
-        <tr>
-            <td>Phone</td>
-            <td><input type="text" id="reg-phone" disabled /></td>
-        </tr>
-        <tr>
-            <td>Department</td>
-            <td><input type="text" id="reg-department" disabled /></td>
-        </tr>
-        <tr>
-            <td>Year</td>
-            <td><input type="text" id="reg-year" disabled /></td>
-        </tr>
-        <tr>
-            <td>CGPA</td>
-            <td><input type="text" id="reg-cgpa" disabled /></td>
-        </tr>
-    </table>
-
-    <!-- Action Buttons -->
-    <div class="registration-actions">
-        <button class="btn btn-primary" id="edit-registration">Edit</button>
-        <button class="btn btn-primary hidden" id="save-registration">Save</button>
-    </div>
-
-    <p id="registration-msg"></p>
 </div>
 <!-- COURSES PAGE -->
 <div id="courses-page" class="page">
