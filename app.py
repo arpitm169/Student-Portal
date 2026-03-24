@@ -16,6 +16,25 @@ def get_db_connection():
         cursor_factory=RealDictCursor
     )
 
+# ---------- AUTO-CREATE TABLES ----------
+def init_db():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS payment_history (
+            payment_id SERIAL PRIMARY KEY,
+            user_id INTEGER REFERENCES users(user_id),
+            amount NUMERIC(10,2) NOT NULL,
+            payment_method VARCHAR(50) DEFAULT 'Card',
+            paid_at TIMESTAMP DEFAULT NOW()
+        )
+    """)
+    conn.commit()
+    cur.close()
+    conn.close()
+
+init_db()
+
 # ---------- HOME ----------
 @app.route("/")
 def home():
@@ -129,6 +148,7 @@ def update_finance():
     data = request.json
     user_id = data.get("user_id")
     amount = data.get("amount")
+    payment_method = data.get("payment_method", "Card")
 
     if user_id is None or amount is None or amount <= 0:
         return jsonify({"success": False, "message": "Invalid data"}), 400
@@ -166,11 +186,41 @@ def update_finance():
         WHERE user_id = %s
     """, (new_paid, overdue, user_id))
 
+    # Record payment in history
+    cursor.execute("""
+        INSERT INTO payment_history (user_id, amount, payment_method)
+        VALUES (%s, %s, %s)
+    """, (user_id, amount, payment_method))
+
     conn.commit()
     cursor.close()
     conn.close()
 
     return jsonify({"success": True})
+
+# ---------- PAYMENT HISTORY ----------
+@app.route("/payments/<int:user_id>")
+def get_payments(user_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT payment_id, amount, payment_method, paid_at
+        FROM payment_history
+        WHERE user_id = %s
+        ORDER BY paid_at DESC
+    """, (user_id,))
+    payments = cur.fetchall()
+
+    # Convert datetime to string
+    for p in payments:
+        p["paid_at"] = p["paid_at"].isoformat() if p["paid_at"] else None
+        p["amount"] = float(p["amount"])
+
+    cur.close()
+    conn.close()
+
+    return jsonify({"success": True, "payments": payments})
 
 # ---------- COURSES ----------
 @app.route("/courses/enrolled/<int:user_id>")
