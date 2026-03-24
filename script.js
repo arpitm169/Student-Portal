@@ -29,6 +29,8 @@
     const logoutBtn = document.getElementById("logout-btn");
     const editBtn = document.getElementById("edit-registration");
     const saveBtn = document.getElementById("save-registration");
+    const cancelBtn = document.getElementById("cancel-registration");
+    const profileEditActions = document.getElementById("profile-edit-actions");
 
     const regInputs = [
         "reg-name-profile",
@@ -38,15 +40,41 @@
         "reg-year",
         "reg-cgpa"
     ];
+    
+    let originalProfileData = {};
+
     editBtn?.addEventListener("click", () => {
         regInputs.forEach(id => {
-            document.getElementById(id).disabled = false;
+            const el = document.getElementById(id);
+            originalProfileData[id] = el.value;
+            el.disabled = false;
         });
 
-        editBtn.classList.add("hidden");
-        saveBtn.classList.remove("hidden");
+        editBtn.style.display = "none";
+        profileEditActions?.classList.remove("hidden");
 
-        document.getElementById("registration-msg").textContent = "";
+        const msg = document.getElementById("registration-msg");
+        if (msg) {
+            msg.className = "";
+            msg.textContent = "";
+        }
+    });
+
+    cancelBtn?.addEventListener("click", () => {
+        regInputs.forEach(id => {
+            const el = document.getElementById(id);
+            el.value = originalProfileData[id] || "";
+            el.disabled = true;
+        });
+
+        editBtn.style.display = "flex";
+        profileEditActions?.classList.add("hidden");
+
+        const msg = document.getElementById("registration-msg");
+        if (msg) {
+            msg.className = "";
+            msg.textContent = "";
+        }
     });
 
 
@@ -166,6 +194,9 @@
 
             pages.forEach(p => p.classList.remove("active"));
             document.getElementById(`${page}-page`)?.classList.add("active");
+        if (page === "payment") {
+        loadPaymentPage();
+    }
         if (page === "registration") {
         loadRegistration();
     }
@@ -355,6 +386,7 @@ document.getElementById("overdue-amount").textContent =
             document.getElementById("profile-regno-display").textContent = data.user.registration_no || "—";
             document.getElementById("profile-dept-display").textContent = data.user.department || "—";
             document.getElementById("profile-year-display").textContent = data.user.year || "—";
+            document.getElementById("profile-cgpa-display").textContent = data.user.cgpa || "—";
 
             // ✅ Update avatar initials
             const initials = getInitials(data.user.name || "John Doe");
@@ -366,6 +398,18 @@ document.getElementById("overdue-amount").textContent =
 }
 
 saveBtn?.addEventListener("click", async () => {
+    const saveBtnText = document.getElementById("save-btn-text");
+    const saveBtnLoader = document.getElementById("save-btn-loader");
+    const msgElement = document.getElementById("registration-msg");
+    const profileEditActions = document.getElementById("profile-edit-actions");
+    const editBtn = document.getElementById("edit-registration");
+    
+    saveBtn.disabled = true;
+    saveBtnText.textContent = "Saving...";
+    saveBtnLoader.classList.remove("hidden");
+    msgElement.className = "";
+    msgElement.textContent = "";
+
     const payload = {
         user_id: loggedInUser.id,
         name: document.getElementById("reg-name-profile").value,
@@ -376,45 +420,52 @@ saveBtn?.addEventListener("click", async () => {
         cgpa: document.getElementById("reg-cgpa").value
     };
 
+    try {
+        const res = await fetch("/profile/update", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
 
-        try {
-            const res = await fetch("/profile/update", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
+        const data = await res.json();
+
+        if (data.success) {
+            msgElement.textContent = "Profile updated successfully!";
+            msgElement.className = "success";
+
+            // Disable fields again
+            regInputs.forEach(id => {
+                document.getElementById(id).disabled = true;
             });
 
-            const data = await res.json();
+            if(profileEditActions) profileEditActions.classList.add("hidden");
+            if(editBtn) editBtn.style.display = "flex";
+            
+            loggedInUser.name = payload.name;
+            document.getElementById("student-name").textContent = payload.name;
+            document.getElementById("header-user-name").textContent = payload.name;
+            document.getElementById("header-avatar").textContent = getInitials(payload.name);
 
-            if (data.success) {
-                document.getElementById("registration-msg").textContent =
-                    "Details saved successfully";
-
-                // Disable fields again
-                regInputs.forEach(id => {
-                    document.getElementById(id).disabled = true;
-                });
-
-                saveBtn.classList.add("hidden");
-                editBtn.classList.remove("hidden");
-                loggedInUser.name = payload.name;
-
-document.getElementById("student-name").textContent = payload.name;
-document.getElementById("header-user-name").textContent = payload.name;
-document.getElementById("header-avatar").textContent =
-    getInitials(payload.name);
-
-
-                // Update header display with new values
-                document.getElementById("profile-regno-display").textContent = payload.registration_no || "—";
-                document.getElementById("profile-dept-display").textContent = payload.department || "—";
-                document.getElementById("profile-year-display").textContent = payload.year || "—";
-            }
-        } catch {
-            document.getElementById("registration-msg").textContent =
-                "Failed to save details";
+            // Update header display with new values
+            document.getElementById("profile-name-display").textContent = payload.name || "John Doe";
+            document.getElementById("profile-regno-display").textContent = payload.registration_no || "—";
+            document.getElementById("profile-dept-display").textContent = payload.department || "—";
+            document.getElementById("profile-year-display").textContent = payload.year || "—";
+            document.getElementById("profile-cgpa-display").textContent = payload.cgpa || "—";
+            document.getElementById("profile-avatar").textContent = getInitials(payload.name || "John Doe");
+        } else {
+            msgElement.textContent = "Failed to update profile";
+            msgElement.className = "error";
         }
-    });
+    } catch {
+        msgElement.textContent = "Server error occurred while saving";
+        msgElement.className = "error";
+    } finally {
+        saveBtn.disabled = false;
+        saveBtnText.textContent = "Save Changes";
+        saveBtnLoader.classList.add("hidden");
+    }
+});
 async function loadAllCourses() {
     try {
         const res = await fetch(`/courses/all/${loggedInUser.id}`);
@@ -530,60 +581,298 @@ async function dropCourse(courseId) {
 
 
 /* ========= PAYMENT PAGE ========= */
+let selectedPaymentMethod = 'Card';
+
+// --- Payment method selector ---
+document.querySelectorAll('.pay-method-card').forEach(card => {
+    card.addEventListener('click', () => {
+        document.querySelectorAll('.pay-method-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedPaymentMethod = card.dataset.method;
+    });
+});
+
+// --- Load payment page data ---
+async function loadPaymentPage() {
+    try {
+        // Fetch finance + payment history in parallel
+        const [finRes, histRes] = await Promise.all([
+            fetch(`/finance/${loggedInUser.id}`),
+            fetch(`/payments/${loggedInUser.id}`)
+        ]);
+        const finData = await finRes.json();
+        const histData = await histRes.json();
+
+        // Update fee summary card
+        if (finData.success && finData.finance) {
+            const f = finData.finance;
+            const total = Number(f.total_amount);
+            const paid = Number(f.paid_amount);
+            const remaining = Number(f.overdue_amount);
+            const pct = total > 0 ? Math.round((paid / total) * 100) : 0;
+
+            document.getElementById('pay-total').textContent = `₹ ${formatNumber(total)}`;
+            document.getElementById('pay-paid').textContent = `₹ ${formatNumber(paid)}`;
+            document.getElementById('pay-remaining').textContent = `₹ ${formatNumber(remaining)}`;
+
+            // Progress bar
+            document.getElementById('pay-progress-fill').style.width = `${pct}%`;
+            document.getElementById('pay-progress-label').textContent = `${pct}% paid`;
+
+            // Badge
+            const badge = document.getElementById('pay-status-badge');
+            if (remaining <= 0) {
+                badge.textContent = 'ALL CLEARED';
+                badge.className = 'pay-summary-badge cleared';
+            } else {
+                badge.textContent = 'PENDING';
+                badge.className = 'pay-summary-badge pending';
+            }
+        }
+
+        // Update payment history table
+        const tbody = document.getElementById('pay-history-body');
+        tbody.innerHTML = '';
+
+        if (histData.success && histData.payments && histData.payments.length > 0) {
+            histData.payments.forEach((p, i) => {
+                const date = new Date(p.paid_at);
+                const dateStr = date.toLocaleDateString('en-IN', {
+                    day: '2-digit', month: 'short', year: 'numeric'
+                });
+
+                const methodIcons = { 'Card': '💳', 'UPI': '📱', 'Net Banking': '🏦' };
+                const icon = methodIcons[p.payment_method] || '💳';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${i + 1}</td>
+                        <td>${dateStr}</td>
+                        <td><strong>₹ ${formatNumber(p.amount)}</strong></td>
+                        <td><span class="pay-method-badge">${icon} ${p.payment_method}</span></td>
+                        <td>
+                            <button class="btn-receipt" onclick='downloadReceipt(${JSON.stringify(p)})'>
+                                📄 Receipt
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        } else {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted-foreground);">No payments yet</td></tr>';
+        }
+    } catch (e) {
+        console.error('Failed to load payment page', e);
+    }
+}
+
+// --- Pay button handler ---
 document.getElementById('pay-btn')?.addEventListener('click', async () => {
     const amountInput = document.getElementById('pay-amount');
+    const inputWrapper = amountInput.closest('.pay-input-wrapper');
     const msgElement = document.getElementById('payment-msg');
+    const payBtn = document.getElementById('pay-btn');
+    const btnText = document.getElementById('pay-btn-text');
+    const btnLoader = document.getElementById('pay-btn-loader');
     const amount = parseFloat(amountInput.value);
 
-    // ✅ STEP 1: Reset previous states (remove old colors)
-    amountInput.classList.remove('error', 'success');
+    // Reset states
+    inputWrapper.classList.remove('error', 'success');
     msgElement.className = '';
     msgElement.textContent = '';
 
-    // ✅ STEP 2: Check if amount is valid
+    // Validate
     if (!amount || amount <= 0) {
-        // Show RED error with shake animation
-        amountInput.classList.add('error');
+        inputWrapper.classList.add('error');
         msgElement.textContent = '✗ Please enter a valid amount';
         msgElement.className = 'error';
         return;
     }
 
+    // Show loading state
+    payBtn.disabled = true;
+    btnText.textContent = 'Processing...';
+    btnLoader.classList.remove('hidden');
+
     try {
-        // ✅ STEP 3: Send payment to server
         const response = await fetch('/finance/update', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 user_id: loggedInUser.id,
-                amount: amount
+                amount: amount,
+                payment_method: selectedPaymentMethod
             })
         });
 
         const data = await response.json();
 
         if (data.success) {
-            // ✅ STEP 4: Show GREEN success
-            amountInput.classList.add('success');
-            msgElement.textContent = '✓ Payment successful!';
+            inputWrapper.classList.add('success');
+            msgElement.textContent = `✓ Payment of ₹${formatNumber(amount)} via ${selectedPaymentMethod} successful!`;
             msgElement.className = 'success';
-            amountInput.value = ''; // Clear the input
-            
-            // Refresh finance data on dashboard
-            await loadFinanceData();
+            amountInput.value = '';
+
+            // Refresh all payment data
+            await Promise.all([loadPaymentPage(), loadFinanceData()]);
         } else {
-            // ✅ STEP 5: Show RED error if payment failed
-            amountInput.classList.add('error');
+            inputWrapper.classList.add('error');
             msgElement.textContent = '✗ ' + (data.message || 'Payment failed');
             msgElement.className = 'error';
         }
     } catch (error) {
-        // ✅ STEP 6: Show RED error if server is down
-        amountInput.classList.add('error');
+        inputWrapper.classList.add('error');
         msgElement.textContent = '✗ An error occurred. Please try again.';
         msgElement.className = 'error';
+    } finally {
+        // Reset button
+        payBtn.disabled = false;
+        btnText.textContent = 'Pay Now';
+        btnLoader.classList.add('hidden');
     }
 });
+
+// --- Download Receipt ---
+function downloadReceipt(payment) {
+    const date = new Date(payment.paid_at);
+    const dateStr = date.toLocaleDateString('en-IN', {
+        day: '2-digit', month: 'long', year: 'numeric'
+    });
+    const timeStr = date.toLocaleTimeString('en-IN', {
+        hour: '2-digit', minute: '2-digit'
+    });
+    const txnId = 'TXN' + String(payment.payment_id).padStart(8, '0');
+
+    const receiptHTML = `
+    <!DOCTYPE html>
+    <html><head>
+        <title>Payment Receipt - ${txnId}</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body {
+                font-family: 'Inter', sans-serif;
+                background: #f5f7fb;
+                padding: 40px;
+                color: #1a1a2e;
+            }
+            .receipt {
+                max-width: 600px;
+                margin: 0 auto;
+                background: white;
+                border-radius: 16px;
+                overflow: hidden;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            }
+            .receipt-header {
+                background: linear-gradient(135deg, #1e3a8a 0%, #4338ca 50%, #7c3aed 100%);
+                color: white;
+                padding: 2rem 2.5rem;
+                text-align: center;
+            }
+            .receipt-header h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+            .receipt-header p { opacity: 0.85; font-size: 0.9rem; }
+            .receipt-body { padding: 2rem 2.5rem; }
+            .receipt-row {
+                display: flex;
+                justify-content: space-between;
+                padding: 0.875rem 0;
+                border-bottom: 1px solid #e5e9f2;
+            }
+            .receipt-row:last-child { border-bottom: none; }
+            .receipt-label { color: #64748b; font-size: 0.9rem; }
+            .receipt-value { font-weight: 600; font-size: 0.95rem; }
+            .receipt-amount {
+                text-align: center;
+                padding: 1.5rem;
+                margin: 1rem 0;
+                background: #f0fdf4;
+                border-radius: 12px;
+                border: 1px solid #bbf7d0;
+            }
+            .receipt-amount .label { font-size: 0.85rem; color: #64748b; }
+            .receipt-amount .value { font-size: 2rem; font-weight: 700; color: #16a34a; }
+            .receipt-footer {
+                text-align: center;
+                padding: 1.5rem;
+                background: #f8f9fd;
+                font-size: 0.8rem;
+                color: #64748b;
+            }
+            .receipt-status {
+                display: inline-block;
+                padding: 0.25rem 0.75rem;
+                border-radius: 20px;
+                background: #dcfce7;
+                color: #16a34a;
+                font-weight: 700;
+                font-size: 0.8rem;
+                margin-top: 0.5rem;
+            }
+            .print-btn {
+                display: block;
+                margin: 1.5rem auto;
+                padding: 0.75rem 2rem;
+                background: #4a5aba;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 0.95rem;
+                font-weight: 600;
+                cursor: pointer;
+            }
+            .print-btn:hover { background: #3d4a9a; }
+            @media print {
+                body { padding: 0; background: white; }
+                .print-btn { display: none; }
+                .receipt { box-shadow: none; }
+            }
+        </style>
+    </head><body>
+        <div class="receipt">
+            <div class="receipt-header">
+                <h1>🎓 Student Portal</h1>
+                <p>Payment Receipt</p>
+            </div>
+            <div class="receipt-body">
+                <div class="receipt-amount">
+                    <div class="label">Amount Paid</div>
+                    <div class="value">₹ ${Number(payment.amount).toLocaleString('en-IN')}</div>
+                    <span class="receipt-status">✓ PAID</span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Transaction ID</span>
+                    <span class="receipt-value">${txnId}</span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Student Name</span>
+                    <span class="receipt-value">${loggedInUser.name}</span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Payment Method</span>
+                    <span class="receipt-value">${payment.payment_method}</span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Date</span>
+                    <span class="receipt-value">${dateStr}</span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Time</span>
+                    <span class="receipt-value">${timeStr}</span>
+                </div>
+            </div>
+            <div class="receipt-footer">
+                This is a computer-generated receipt. No signature required.
+            </div>
+        </div>
+        <button class="print-btn" onclick="window.print()">🖨️ Print Receipt</button>
+    </body></html>
+    `;
+
+    const win = window.open('', '_blank');
+    win.document.write(receiptHTML);
+    win.document.close();
+}
 
 /* ========= ATTENDANCE PAGE WITH PIE CHARTS ========= */
 async function loadAttendance() {
