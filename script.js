@@ -1,5 +1,5 @@
 /**************************************************
-     * Student Portal - Frontend JavaScript (Dynamic)
+     * Student Portal - Frontend JavaScript 
      **************************************************/
 
     /* ========= GLOBAL STATE ========= */
