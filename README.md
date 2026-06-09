@@ -1,4 +1,4 @@
-# Student Portal
+# Student Connect
 
 ## Overview 
 
