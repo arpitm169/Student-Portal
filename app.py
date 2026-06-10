@@ -6,13 +6,11 @@ from psycopg2.extras import RealDictCursor
 app = Flask(__name__)
 
 # ---------- DATABASE CONNECTION ----------
+import os
+
 def get_db_connection():
     return psycopg2.connect(
-        dbname="student_portal_db",
-        user="postgres",
-        password="arpit123",
-        host="localhost",
-        port="5432",
+        os.environ["postgresql://neondb_owner:npg_x2abT3LSDKrO@ep-square-mountain-ao9k7o3r.c-2.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"],
         cursor_factory=RealDictCursor
     )
 
